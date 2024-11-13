@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/off.png</file>
+        <file>icons/on.png</file>
+        <file>icons/refresh.png</file>
+        <file>icons/refresh_s.png</file>
+        <file>icons/to (3).png</file>
+        <file>icons/to.png</file>
+        <file>icons/tof.png</file>
+    </qresource>
+</RCC>
