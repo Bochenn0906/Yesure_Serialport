@@ -1,5 +1,6 @@
 #include "widget.h"
 #include "ui_widget.h"
+#include "calculate_crc.h"
 #include <QStatusBar>
 #include <QDebug>
 
@@ -137,21 +138,10 @@ void Widget::on_btnSwitchOff_clicked()
 
 }
 
-// // 状态栏标签显示计数值
-// void Widget::setNumOnLabel(QLabel *lbl, QString strS, long num)
-// {
-//     // 标签显示
-//     QString strN;
-//     strN.sprintf("%ld", num);
-//     QString str = strS + strN;
-//     lbl->setText(str);
-// }
-
 void Widget::serialPortRead_Slot()
 {
-    qDebug() << "触发接收函数" ;
-    QByteArray recBuf;
     recBuf = mySerialPort->readAll();
+    qDebug() << "触发接收函数" << recBuf;
 
     if (ui->checkRec->checkState() == Qt::Unchecked) {
         // 字符串形式显示
@@ -162,10 +152,12 @@ void Widget::serialPortRead_Slot()
         } else {
             ui->msg_Rec->appendPlainText(QString::fromLocal8Bit(recBuf));
         }
-        qDebug() << "字符" << recBuf ;
+        qDebug() << "字符" << recBuf;
     } else {
         // 16进制形式显示
         QString str1 = recBuf.toHex().toUpper();
+        qDebug() << "十六进制处理结果" << str1;
+
         QString str2;
         for (int i = 0; i < str1.length(); i += 2) {
             str2 += str1.mid(i, 2);
@@ -178,12 +170,125 @@ void Widget::serialPortRead_Slot()
         } else {
             ui->msg_Rec->appendPlainText(str2.trimmed());
         }
-        qDebug() << "16 进制" << recBuf;
+        qDebug() << "16 进制" << str2.trimmed();  // 调整为输出16进制字符串
+    }
+
+    switch (SensorKB_type) {
+    case getNH4_Kb_Btn:
+        SensorKB_type = 0;
+        readDataKB(recBuf);
+        ui->NH4p_K->setText(stringK);
+        ui->NH4p_B->setText(stringB);
+        break;
+    case getK_Kb_Btn:
+        SensorKB_type = 0;
+        readDataKB(recBuf);
+        ui->Kp_K->setText(stringK);
+        ui->Kp_B->setText(stringB);
+        break;
+    case getORP_Kb_Btn:
+        SensorKB_type = 0;
+        readDataKB(recBuf);
+        ui->ORP_K->setText(stringK);
+        ui->ORP_B->setText(stringB);
+        break;
+    case getTOC_Kb_Btn:
+        SensorKB_type = 0;
+        readDataKB(recBuf);
+        ui->TOC_K->setText(stringK);
+        ui->TOC_B->setText(stringB);
+        break;
+    case getSAC_Kb_Btn:
+        SensorKB_type = 0;
+        readDataKB(recBuf);
+        ui->SAC_K->setText(stringK);
+        ui->SAC_B->setText(stringB);
+        break;
+    case getBOD_Kb_Btn:
+        SensorKB_type = 0;
+        readDataKB(recBuf);
+        ui->BOD_K->setText(stringK);
+        ui->BOD_B->setText(stringB);
+        break;
+    case getT_Kb_Btn:
+        SensorKB_type = 0;
+        readDataKB(recBuf);
+        ui->T_K->setText(stringK);
+        ui->T_B->setText(stringB);
+        break;
+        break;
+    case getTUR_Kb_Btn:
+        SensorKB_type = 0;
+        readDataKB(recBuf);
+        ui->TUR_K->setText(stringK);
+        ui->TUR_B->setText(stringB);
+        break;
+    case getPH_Kb_Btn:
+        SensorKB_type = 0;
+        readDataKB(recBuf);
+        ui->pH_K->setText(stringK);
+        ui->pH_B->setText(stringB);
+        break;
+    default:
+        break;
+    }
+
+    switch (SensorKB_type) {
+    case chgNH4_Kb_Btn:
+        readDataKB(recBuf);
+        ui->NH4p_K->setText(stringK);
+        ui->NH4p_B->setText(stringB);
+        break;
+    case chgK_Kb_Btn:
+        readDataKB(recBuf);
+        ui->Kp_K->setText(stringK);
+        ui->Kp_B->setText(stringB);
+        break;
+    case chgORP_Kb_Btn:
+        readDataKB(recBuf);
+        ui->ORP_K->setText(stringK);
+        ui->ORP_B->setText(stringB);
+        break;
+    case chgTOC_Kb_Btn:
+        readDataKB(recBuf);
+        ui->TOC_K->setText(stringK);
+        ui->TOC_B->setText(stringB);
+        break;
+    case chgSAC_Kb_Btn:
+        readDataKB(recBuf);
+        ui->SAC_K->setText(stringK);
+        ui->SAC_B->setText(stringB);
+        break;
+    case chgBOD_Kb_Btn:
+        readDataKB(recBuf);
+        ui->BOD_K->setText(stringK);
+        ui->BOD_B->setText(stringB);
+        break;
+    case chgT_Kb_Btn:
+        readDataKB(recBuf);
+        ui->T_K->setText(stringK);
+        ui->T_B->setText(stringB);
+        break;
+        break;
+    case chgTUR_Kb_Btn:
+        readDataKB(recBuf);
+        ui->TUR_K->setText(stringK);
+        ui->TUR_B->setText(stringB);
+        break;
+    case chgPH_Kb_Btn:
+        readDataKB(recBuf);
+        ui->pH_K->setText(stringK);
+        ui->pH_B->setText(stringB);
+        break;
+    default:
+        break;
     }
 
     // 移动光标到文本结尾
     ui->msg_Rec->moveCursor(QTextCursor::End);
 }
+
+
 // 发送按键槽函数
 // 如果勾选16进制发送，按照asc2的16进制发送
 void Widget::on_btnSend_clicked()
@@ -203,43 +308,19 @@ void Widget::on_btnSend_clicked()
 
     }
 
-    // 如发送成功，会返回发送的字节长度。失败，返回-1。
-    int a = mySerialPort->write(sendData);
-    // // 发送字节计数并显示
-    // if (a > 0) {
-    //     // 发送字节计数
-    //     sendNum += a;
-    //     // 状态栏显示计数值
-    //     setNumOnLabel(lblSendNum, "S: ", sendNum);
-    // } else {
-    //     qDebug() << "发送失败";
-    // }
-
+    mySerialPort->write(sendData);
     qDebug() << sendData;
 }
 
 void Widget::on_btnClearRec_clicked()
 {
     ui->msg_Rec->clear();
-    // // 清除发送、接收字节计数
-    // sendNum = 0;
-    // recvNum = 0;
-    // // 状态栏显示计数值
-    // setNumOnLabel(lblSendNum, "S: ", sendNum);
-    // setNumOnLabel(lblRecvNum, "R: ", recvNum);
 }
-
 
 void Widget::on_btnClearSend_clicked()
 {
     ui->msg_Send->clear();
-    // // 清除发送字节计数
-    // sendNum = 0;
-    // // 状态栏显示计数值
-    // setNumOnLabel(lblSendNum, "S: ", sendNum);
 }
-
-
 
 // 先前发送区的部分在多选框状态转换槽函数中进行转换。（最好多选框和发送区组成一个自定义控件，方便以后调用）
 void Widget::on_checkSend_stateChanged(int arg1)
@@ -340,7 +421,181 @@ void Widget::processIDResponse()
     }
 }
 
-void Widget::on_change_ID_clicked()
+/*  K/B值查询 按钮点击函数集*/
+//NH4+ 查询K/B
+void Widget::on_getNH4p_clicked()
 {
+    SensorKB_type = 0x00A4;
+    QByteArray sendData = QByteArray::fromHex("FF0300A400041034");
+    mySerialPort->write(sendData);
+}
+
+//K+ 查询K/B
+void Widget::on_getK_clicked()
+{
+    SensorKB_type = 0x00A8;
+    QByteArray sendData = QByteArray::fromHex("FF0300A80004D037");
+    mySerialPort->write(sendData);
+}
+
+//ORP 查询K/B
+void Widget::on_getORP_clicked()
+{
+    SensorKB_type = 0x00AC;
+    QByteArray sendData = QByteArray::fromHex("FF0300AC000491F6");
+    mySerialPort->write(sendData);
+}
+
+//TOC 查询K/B
+void Widget::on_getTOCkb_clicked()
+{
+    SensorKB_type = 0x00B0;
+    QByteArray sendData = QByteArray::fromHex("FF0300B000045030");
+    mySerialPort->write(sendData);
+}
+//SAC 查询K/B
+void Widget::on_getSACkb_clicked()
+{
+    SensorKB_type = 0x00B4;
+    QByteArray sendData = QByteArray::fromHex("FF0300B4000411F1");
+    mySerialPort->write(sendData);
+}
+
+//BOD 查询K/B
+void Widget::on_getBODkb_clicked()
+{
+    SensorKB_type = 0x00B8;
+    QByteArray sendData = QByteArray::fromHex("FF0300B80004D1F2");
+    mySerialPort->write(sendData);
+}
+//T% 查询K/B
+void Widget::on_getTab_clicked()
+{
+    SensorKB_type = 0x00BC;
+    QByteArray sendData = QByteArray::fromHex("FF0300BC00049033");
+    mySerialPort->write(sendData);
+}
+
+//TUR 查询K/B
+void Widget::on_getTURkb_clicked()
+{
+    SensorKB_type = 0x00C0;
+    QByteArray sendData = QByteArray::fromHex("FF0300C0000451EB");
+    mySerialPort->write(sendData);
+}
+//pH 查询K/B
+void Widget::on_getPH_clicked()
+{
+    SensorKB_type = 0x00C4;
+    QByteArray sendData = QByteArray::fromHex("FF0300C40004102A");
+    mySerialPort->write(sendData);
+}
+
+//COD 查询K/B
+void Widget::on_getCODkb_clicked()
+{
+    SensorKB_type = 0x00C4;
+    QByteArray sendData = QByteArray::fromHex("FF0300C40004102A");
+    mySerialPort->write(sendData);
+}
+
+
+
+
+
+float Widget::hexStringToFloat(const QString &hexStr) {
+    bool ok;
+    quint32 value = hexStr.toUInt(&ok, 16);
+    if (!ok) {
+        qDebug() << "Conversion failed for hex string:" << hexStr;
+        return 0.0f;
+    }
+    return *(reinterpret_cast<float*>(&value));
+}
+QString Widget::floatToHexString(float f) {
+    quint32 value = *(reinterpret_cast<quint32*>(&f));
+    std::stringstream stream;
+    stream << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << value;
+    return QString::fromStdString(stream.str());
+}
+float stringToFloat(const QString &str) {
+    bool ok;
+    float value = str.toFloat(&ok);
+    if (!ok) {
+        qDebug() << "Conversion failed for string:" << str;
+        return 0.0f;
+    }
+    return value;
+}
+
+
+void Widget::readDataKB(const QByteArray &data)
+{
+    valueHex2String = data.toHex().toUpper();
+    qDebug() << "处理成十六进制接收数据：" << valueHex2String;
+
+    QString bytes4To7 = valueHex2String.mid(6, 8);
+    QString bytes8To11 = valueHex2String.mid(14, 8);
+
+    qDebug() << "bytes4To7:" << bytes4To7;
+    qDebug() << "bytes8To11:" << bytes8To11;
+
+    Sensor_k = hexStringToFloat(bytes4To7);
+    Sensor_B = hexStringToFloat(bytes8To11);
+
+    qDebug() << "Sensor_k:" << Sensor_k;
+    qDebug() << "Sensor_B:" << Sensor_B;
+
+    stringK = QString::number(Sensor_k);
+    stringB = QString::number(Sensor_B);
+
+    qDebug() << "字符串处理：" << stringK;
+    qDebug() << "字符串处理：" << stringB;
+
+
+}
+
+void Widget::toChangeKB(QString data1, QString data2)
+{
+    float temp1 = stringToFloat(data1);
+    float temp2 = stringToFloat(data2);
+
+    qDebug() << "coverted data:" <<temp1;
+    qDebug() << "coverted data:" <<temp2;
+
+    stringK = floatToHexString(temp1);
+    stringB = floatToHexString(temp2);
+
+    qDebug() << "coverted hexstring data:" <<stringK;
+    qDebug() << "coverted hexstring data:" <<stringB;
+
+}
+
+
+
+//NH4+ K/B值修改
+void Widget::on_chgNH4p_clicked()
+{
+    SensorKB_change = 1;
+    QString value_K = ui->NH4p_K->text();
+    QString value_B = ui->NH4p_B->text();
+
+    qDebug() << "当前输入框的内容：" <<value_K ;
+    qDebug() << "当前输入框的内容：" <<value_B ;
+
+    toChangeKB(value_K, value_B);
+    std::vector<unsigned char> data = {0xFF, 0x10, 0x00, 0xA4, 0x00, 0x04, 0x08, 0x00, 0x00, 0x00, 0x00};
+
+    // QString a = "FF1000A400040800000000";
+    // // QByteArray a = QByteArray::fromHex("FF1000A400040800000000");
+    CalculatCRC crcCalculator;
+    // QByteArray b = crcCalculator.String2ByteArray(a);
+    // qDebug() << "数据帧：" <<a ;
+
+    // // crcCalculator.AppendCRC16(b);
+
+    // qDebug() << "加上crc的数据帧" << b;
+    unsigned short crc = crcCalculator.calculateCRC16(data);
+    std::cout << "CRC16 value: " << std::hex << crc << std::endl;
 }
 
