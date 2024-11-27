@@ -45,7 +45,7 @@
       <number>6</number>
      </property>
      <item row="1" column="2">
-      <widget class="QTextEdit" name="textEdit_8">
+      <widget class="QTextEdit" name="BoardTemp">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -58,10 +58,13 @@
          <height>25</height>
         </size>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QPushButton" name="pushButton_9">
+      <widget class="QPushButton" name="getHUMI">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -80,7 +83,7 @@
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="getWaterTemp">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -99,7 +102,7 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QPushButton" name="pushButton_8">
+      <widget class="QPushButton" name="getBoardTemp">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -118,7 +121,7 @@
       </widget>
      </item>
      <item row="2" column="2">
-      <widget class="QTextEdit" name="textEdit_7">
+      <widget class="QTextEdit" name="WaterTemp">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -130,6 +133,9 @@
          <width>167</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -148,7 +154,7 @@
         </size>
        </property>
        <property name="text">
-        <string>℃</string>
+        <string>%</string>
        </property>
       </widget>
      </item>
@@ -191,7 +197,7 @@
       </widget>
      </item>
      <item row="0" column="2">
-      <widget class="QTextEdit" name="textEdit_12">
+      <widget class="QTextEdit" name="Humi">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -204,11 +210,14 @@
          <height>25</height>
         </size>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
     </layout>
    </widget>
-   <widget class="QPushButton" name="pushButton_15">
+   <widget class="QPushButton" name="getEnv">
     <property name="geometry">
      <rect>
       <x>220</x>
@@ -565,7 +574,7 @@ border-image: url(:/icons/to.png);</string>
     </property>
     <layout class="QGridLayout" name="gridLayout_4">
      <item row="0" column="2">
-      <widget class="QTextEdit" name="textEdit_9">
+      <widget class="QTextEdit" name="StartTime">
        <property name="minimumSize">
         <size>
          <width>166</width>
@@ -575,41 +584,34 @@ border-image: url(:/icons/to.png);</string>
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QPushButton" name="pushButton_14">
+      <widget class="QPushButton" name="chgWiperTime">
        <property name="text">
-        <string>更改工作时间</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QTextEdit" name="textEdit_10">
-       <property name="minimumSize">
-        <size>
-         <width>166</width>
-         <height>25</height>
-        </size>
+        <string>更改转动时长</string>
        </property>
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QPushButton" name="pushButton_13">
+      <widget class="QPushButton" name="getWiperTime">
        <property name="text">
-        <string>当前工作时间</string>
+        <string>当前转动时长</string>
        </property>
       </widget>
      </item>
      <item row="1" column="2">
-      <widget class="QTextEdit" name="textEdit_11">
+      <widget class="QTextEdit" name="WiperTime">
        <property name="minimumSize">
         <size>
          <width>166</width>
          <height>25</height>
         </size>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QPushButton" name="pushButton_12">
+      <widget class="QPushButton" name="startWiper">
        <property name="minimumSize">
         <size>
          <width>80</width>
@@ -642,6 +644,16 @@ border-image: url(:/icons/to.png);</string>
        </property>
       </widget>
      </item>
+     <item row="2" column="2">
+      <widget class="QPlainTextEdit" name="chgWipertime">
+       <property name="minimumSize">
+        <size>
+         <width>166</width>
+         <height>25</height>
+        </size>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
   </widget>
@@ -655,7 +667,7 @@ border-image: url(:/icons/to.png);</string>
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="COD">
     <attribute name="title">
@@ -3225,20 +3237,370 @@ border-image: url(:/icons/to.png);</string>
     <attribute name="title">
      <string>电导率</string>
     </attribute>
-    <widget class="QWidget" name="layoutWidget_11">
+    <widget class="QGroupBox" name="groupBox_9">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>19</x>
+       <y>10</y>
+       <width>191</width>
+       <height>131</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>系数更改</string>
+     </property>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>168</width>
+        <height>91</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_19">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_87">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>80</width>
+           <height>10</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>COND-K</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="label_86">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>80</width>
+           <height>10</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>COND-B</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLineEdit" name="COND_K">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>80</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>23</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="COND_B">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>80</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>23</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QPushButton" name="getCONDkb">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>80</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>获取</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QPushButton" name="chgCONDkb">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>80</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>设置</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_16">
+     <property name="geometry">
+      <rect>
+       <x>270</x>
+       <y>10</y>
+       <width>191</width>
+       <height>131</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>系数更改</string>
+     </property>
+     <widget class="QWidget" name="layoutWidget_8">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>168</width>
+        <height>91</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_25">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_106">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>80</width>
+           <height>10</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>TDS-K</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="label_108">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>80</width>
+           <height>10</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>TDS-B</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLineEdit" name="TDS_K">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>80</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>23</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="TDS_B">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>80</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>23</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QPushButton" name="getTDSkb">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>80</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>获取</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QPushButton" name="chgTDSkb">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>80</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>23</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>设置</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="">
+     <property name="geometry">
+      <rect>
+       <x>21</x>
        <y>190</y>
-       <width>248</width>
+       <width>492</width>
        <height>56</height>
       </rect>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_13">
-      <item>
+     <layout class="QGridLayout" name="gridLayout_13">
+      <item row="0" column="0">
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
-         <widget class="QPushButton" name="pushButton_48">
+         <widget class="QPushButton" name="getCOND">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -3292,7 +3654,7 @@ border-image: url(:/icons/to.png);</string>
         </item>
        </layout>
       </item>
-      <item>
+      <item row="0" column="1">
        <layout class="QGridLayout" name="gridLayout_8">
         <item row="0" column="0">
          <widget class="QLabel" name="label_54">
@@ -3304,18 +3666,18 @@ border-image: url(:/icons/to.png);</string>
           </property>
           <property name="minimumSize">
            <size>
-            <width>50</width>
+            <width>85</width>
             <height>20</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>50</width>
+            <width>85</width>
             <height>20</height>
            </size>
           </property>
           <property name="text">
-           <string>COND</string>
+           <string>温度</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -3323,7 +3685,7 @@ border-image: url(:/icons/to.png);</string>
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QLineEdit" name="lineEdit_41">
+         <widget class="QLineEdit" name="COND_TEMP">
           <property name="minimumSize">
            <size>
             <width>100</width>
@@ -3348,18 +3710,18 @@ border-image: url(:/icons/to.png);</string>
           </property>
           <property name="minimumSize">
            <size>
-            <width>50</width>
+            <width>85</width>
             <height>20</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>50</width>
+            <width>85</width>
             <height>20</height>
            </size>
           </property>
           <property name="text">
-           <string>温度</string>
+           <string>电导率(COND)</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -3367,7 +3729,105 @@ border-image: url(:/icons/to.png);</string>
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QLineEdit" name="lineEdit_42">
+         <widget class="QLineEdit" name="COND">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>20</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="0" column="2">
+       <layout class="QGridLayout" name="gridLayout_12">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_58">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>95</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>95</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>盐度(Salinity)</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="SAIL">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>20</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_59">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>95</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>95</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>总溶解固体(TDS)</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="TDS">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -3391,181 +3851,6 @@ border-image: url(:/icons/to.png);</string>
        </layout>
       </item>
      </layout>
-    </widget>
-    <widget class="QGroupBox" name="groupBox_9">
-     <property name="geometry">
-      <rect>
-       <x>19</x>
-       <y>10</y>
-       <width>191</width>
-       <height>131</height>
-      </rect>
-     </property>
-     <property name="title">
-      <string>系数更改</string>
-     </property>
-     <widget class="QWidget" name="layoutWidget">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>30</y>
-        <width>168</width>
-        <height>91</height>
-       </rect>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_19">
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_87">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>80</width>
-           <height>10</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>80</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>COD-K</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLabel" name="label_86">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>80</width>
-           <height>10</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>80</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>COD-B</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLineEdit" name="lineEdit_73">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>80</width>
-           <height>23</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>80</width>
-           <height>23</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="lineEdit_74">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>80</width>
-           <height>23</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>80</width>
-           <height>23</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QPushButton" name="pushButton_80">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>80</width>
-           <height>23</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>80</width>
-           <height>23</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>获取</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QPushButton" name="pushButton_81">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>80</width>
-           <height>23</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>80</width>
-           <height>23</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>设置</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="tab_3">
@@ -5767,9 +6052,9 @@ border-image: url(:/icons/to.png);</string>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>0</x>
       <y>30</y>
-      <width>281</width>
+      <width>296</width>
       <height>61</height>
      </rect>
     </property>
@@ -5780,75 +6065,6 @@ border-image: url(:/icons/to.png);</string>
      </size>
     </property>
     <layout class="QGridLayout" name="gridLayout_3">
-     <item row="1" column="2">
-      <widget class="QLineEdit" name="Kp_B_2">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>70</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>70</width>
-         <height>25</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="newID">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>70</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>70</width>
-         <height>25</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QPushButton" name="getNH4p_2">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>70</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>70</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>获取ID</string>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="2">
       <widget class="QPushButton" name="getK_2">
        <property name="sizePolicy">
@@ -5871,6 +6087,34 @@ border-image: url(:/icons/to.png);</string>
        </property>
        <property name="text">
         <string>设置ID</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QLineEdit" name="SN">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>70</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>70</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maxLength">
+        <number>8</number>
+       </property>
+       <property name="readOnly">
+        <bool>false</bool>
        </property>
       </widget>
      </item>
@@ -5899,8 +6143,55 @@ border-image: url(:/icons/to.png);</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="3">
-      <widget class="QLineEdit" name="SN">
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="newID">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>70</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>70</width>
+         <height>25</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QPushButton" name="getID">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>70</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>70</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>获取ID</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLineEdit" name="Kp_B_2">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -5959,6 +6250,9 @@ border-image: url(:/icons/to.png);</string>
          <width>30</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="maxLength">
+        <number>-1</number>
        </property>
       </widget>
      </item>

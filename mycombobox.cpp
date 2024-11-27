@@ -35,6 +35,7 @@ void myComboBox::scanActivePort()
 // 重写鼠标点击事件
 void myComboBox::mousePressEvent(QMouseEvent *event)
 {
+
     if(event->button() == Qt::LeftButton)
     {
         // 扫描可用串口
