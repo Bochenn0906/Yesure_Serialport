@@ -15,7 +15,7 @@ public:
 
 
 protected:
-    // 重写鼠标点击事件
+
     void mousePressEvent(QMouseEvent *event);
 
 

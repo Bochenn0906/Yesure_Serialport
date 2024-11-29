@@ -5,44 +5,35 @@
 
 #define PADDING 5
 
-Widget::Widget(QWidget *parent): QWidget(parent), ui(new Ui::Widget)
+Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget)
 {
     ui->setupUi(this);
     setWindowTitle("研煊调试助手");
 
+    // // 定时发送-定时器
+    // timSend = new QTimer;
+    // timSend->setInterval(1000); // 设置默认定时时长1000ms
+    // connect(timSend, &QTimer::timeout, this, [=]()
+    //         { on_btnSend_clicked(); });
 
-    // 定时发送-定时器
-    timSend = new QTimer;
-    timSend->setInterval(1000);// 设置默认定时时长1000ms
-    connect(timSend, &QTimer::timeout, this, [=](){
-        on_btnSend_clicked();
-    });
-
-    // 新建一串口对象
     mySerialPort = new QSerialPort(this);
 
     // 串口接收，信号槽关联
     connect(mySerialPort, SIGNAL(readyRead()), this, SLOT(serialPortRead_Slot()));
 
-    // 初始时不添加时间戳标志为 false
     addTimestamp = false;
-
 
     // this->setStyleSheet("background: #FFF6E9");
 
     // this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint);
     // isLeftPressed = false;
-
     // this->setMouseTracking(true);
-
-
 }
 
 Widget::~Widget()
 {
     delete ui;
 }
-
 
 // void Widget::mousePressEvent(QMouseEvent *event)
 // {
@@ -143,9 +134,11 @@ Widget::~Widget()
 //     }
 // }
 
-QString Widget::intToHexWithPadding(int value, int padding) {
+QString Widget::intToHexWithPadding(int value, int padding)
+{
     QString hexValue = QString::number(value, 16).toUpper();
-    while (hexValue.length() < padding) {
+    while (hexValue.length() < padding)
+    {
         hexValue = "0" + hexValue;
     }
     return hexValue;
@@ -159,14 +152,15 @@ unsigned short Widget::crc16(unsigned char *CmmBuf, unsigned char Len)
     unsigned char i;
     unsigned char j;
     // if(Len > 78) return 1;
-    if(Len > 200) return 1;
+    if (Len > 200)
+        return 1;
     j = 0;
-    while(j < Len)
+    while (j < Len)
     {
         crc ^= CmmBuf[j];
-        for(i=0; i < 8; i++)
+        for (i = 0; i < 8; i++)
         {
-            if(crc & 0x01)
+            if (crc & 0x01)
             {
                 crc >>= 1;
                 crc ^= 0xA001;
@@ -180,7 +174,6 @@ unsigned short Widget::crc16(unsigned char *CmmBuf, unsigned char Len)
     }
 
     return crc;
-
 }
 
 /*------------------------------
@@ -188,46 +181,46 @@ unsigned short Widget::crc16(unsigned char *CmmBuf, unsigned char Len)
      ------------------------------*/
 bool Widget::crc_Checking(QString message)
 {
-    //将获取到底报文两个两个以空格分开
-    QString strDis,temp_st;
-    int data_frame_bit = 0;//数据帧到位数
-    for(int i = 0;i < message.length(); i += 2)//填加空格
+    // 将获取到底报文两个两个以空格分开
+    QString strDis, temp_st;
+    int data_frame_bit = 0;                       // 数据帧到位数
+    for (int i = 0; i < message.length(); i += 2) // 填加空格
     {
-        temp_st = message.mid(i,2);
+        temp_st = message.mid(i, 2);
         strDis += temp_st;
         strDis += " ";
-        data_frame_bit ++;
+        data_frame_bit++;
     }
-    if( data_frame_bit < 5 )
+    if (data_frame_bit < 5)
     {
         return false;
     }
-    //将获取到底字符串报文，转成QByteArray格式，并用空格分隔获取到有多少个参数i
+    // 将获取到底字符串报文，转成QByteArray格式，并用空格分隔获取到有多少个参数i
     QStringList strlist = strDis.split(" ");
-    int data_frame_bit_crc = data_frame_bit-2;
+    int data_frame_bit_crc = data_frame_bit - 2;
     unsigned char crc_str[data_frame_bit_crc];
-    QString crc_str_accept = "";//接收到的crc校验码
-    QString crc_str_calculated = "";//计算出来的crc校验码大写
-    QString crc_str_calculated_low = "";//计算出来的crc校验码小写
-    for(int i = 0 ; i<data_frame_bit-2 ; i++)
+    QString crc_str_accept = "";         // 接收到的crc校验码
+    QString crc_str_calculated = "";     // 计算出来的crc校验码大写
+    QString crc_str_calculated_low = ""; // 计算出来的crc校验码小写
+    for (int i = 0; i < data_frame_bit - 2; i++)
     {
-        //将数据帧接收到到crc检验吗去掉
-        crc_str[i] = strlist.at(i).toInt(0,16);
+        // 将数据帧接收到到crc检验吗去掉
+        crc_str[i] = strlist.at(i).toInt(0, 16);
     }
 
-    //计算出crc16校验码
-    int crc_reaout_int = this -> crc16(crc_str,data_frame_bit-2);
-    crc_str_calculated = QString("%1").arg(crc_reaout_int, 4, 16, QChar('0')).toUpper();//窗口文件都是大写，所以计算出到字符串字母也要大写。
-    crc_str_calculated_low =  QString("%1").arg(crc_reaout_int, 4, 16, QChar('0')).toLower();//小写
-    //由于编号是0，1，2，3...所以重新拼接到crc校验吗应该从len-1开始，循环两次
-    for(int i = data_frame_bit-1 ; i>data_frame_bit-3 ;i--)
+    // 计算出crc16校验码
+    int crc_reaout_int = this->crc16(crc_str, data_frame_bit - 2);
+    crc_str_calculated = QString("%1").arg(crc_reaout_int, 4, 16, QChar('0')).toUpper();     // 窗口文件都是大写，所以计算出到字符串字母也要大写。
+    crc_str_calculated_low = QString("%1").arg(crc_reaout_int, 4, 16, QChar('0')).toLower(); // 小写
+    // 由于编号是0，1，2，3...所以重新拼接到crc校验吗应该从len-1开始，循环两次
+    for (int i = data_frame_bit - 1; i > data_frame_bit - 3; i--)
     {
-        //重新拼接接收到到crc16校验码
+        // 重新拼接接收到到crc16校验码
         crc_str_accept += strlist.at(i);
     }
-    //qDebug() << crc_str_accept << "-------" << crc_str_calculated;
-    //判断校验码是否正确，正确返回true,
-    if( crc_str_calculated == crc_str_accept || crc_str_calculated_low == crc_str_accept )
+    // qDebug() << crc_str_accept << "-------" << crc_str_calculated;
+    // 判断校验码是否正确，正确返回true,
+    if (crc_str_calculated == crc_str_accept || crc_str_calculated_low == crc_str_accept)
     {
         return true;
     }
@@ -249,54 +242,52 @@ QString Widget::crcCalculation(QString message)
      * 进来不管有没有空格，先去掉，再按找下面标准执行。
      *
      */
-    message =  message.replace(" ", "");
+    message = message.replace(" ", "");
     /*
      * 这边传过来到没有crc校验，所以总长度不要减去2
      */
-    //将获取到底报文两个两个以空格分开
-    QString strDis,temp_st;
-    int data_frame_bit = 0;//数据帧到位数
-    for(int i = 0;i < message.length(); i += 2)//填加空格
+    // 将获取到底报文两个两个以空格分开
+    QString strDis, temp_st;
+    int data_frame_bit = 0;                       // 数据帧到位数
+    for (int i = 0; i < message.length(); i += 2) // 填加空格
     {
-        temp_st = message.mid(i,2);
+        temp_st = message.mid(i, 2);
         strDis += temp_st;
         strDis += " ";
-        data_frame_bit ++;
+        data_frame_bit++;
     }
-    if( data_frame_bit < 5 )
+    if (data_frame_bit < 5)
     {
         return "false";
     }
-    //将获取到底字符串报文，转成QByteArray格式，并用空格分隔获取到有多少个参数i
+    // 将获取到底字符串报文，转成QByteArray格式，并用空格分隔获取到有多少个参数i
     QStringList strlist = strDis.split(" ");
     int data_frame_bit_crc = data_frame_bit;
     unsigned char crc_str[data_frame_bit_crc];
 
-    QString crc_str_calculated_low = "";//计算出来的crc校验码小写
-    for(int i = 0 ; i<data_frame_bit ; i++)
+    QString crc_str_calculated_low = ""; // 计算出来的crc校验码小写
+    for (int i = 0; i < data_frame_bit; i++)
     {
-        //将数据帧存放数组
-        crc_str[i] = strlist.at(i).toInt(0,16);
+        // 将数据帧存放数组
+        crc_str[i] = strlist.at(i).toInt(0, 16);
     }
 
-    //计算出crc16校验码
-    int crc_reaout_int = this -> crc16(crc_str,data_frame_bit);
-    crc_str_calculated_low =  QString("%1").arg(crc_reaout_int, 4, 16, QChar('0')).toLower();//小写
+    // 计算出crc16校验码
+    int crc_reaout_int = this->crc16(crc_str, data_frame_bit);
+    crc_str_calculated_low = QString("%1").arg(crc_reaout_int, 4, 16, QChar('0')).toLower(); // 小写
 
     QString strDis_crc;
-    for(int i = 0;i < crc_str_calculated_low.length(); i += 2)//填加空格
+    for (int i = 0; i < crc_str_calculated_low.length(); i += 2) // 填加空格
     {
-        temp_st = crc_str_calculated_low.mid(i,2);
+        temp_st = crc_str_calculated_low.mid(i, 2);
         strDis_crc += temp_st;
         strDis_crc += " ";
     }
     QStringList strlist_crc = strDis_crc.split(" ");
-    crc_str_calculated_low = strlist_crc.at(1)+strlist_crc.at(0);
-    //qDebug() << "lo hi :" << crc_str_calculated_low ;
+    crc_str_calculated_low = strlist_crc.at(1) + strlist_crc.at(0);
+    // qDebug() << "lo hi :" << crc_str_calculated_low ;
 
-    /*
-     * 将报文和校验拼接，形成带校验到报文，别且返回。
-     */
+
     message = message + crc_str_calculated_low;
 
     return message.toUpper();
@@ -304,29 +295,31 @@ QString Widget::crcCalculation(QString message)
 
 QString Widget::readRequestWithCRC(QString address, int function, int REG, int quality)
 {
-    QString request = address.append(intToHexWithPadding(function,2)).
-                      append(intToHexWithPadding(REG, 4)).
-                      append(intToHexWithPadding(quality, 4));
-
+    QString request = address.append(intToHexWithPadding(function, 2)).append(intToHexWithPadding(REG, 4)).append(intToHexWithPadding(quality, 4));
     return crcCalculation(request);
 }
 
-QString Widget::ushortToHex(unsigned short value) {
+QString Widget::ushortToHex(unsigned short value)
+{
     return QString("%1").arg(value, 4, 16, QChar('0')).toUpper();
 }
 
-float Widget::hexStringToFloat(const QString &hexStr) {
+float Widget::hexStringToFloat(const QString &hexStr)
+{
     bool ok;
     quint32 value = hexStr.toUInt(&ok, 16);
-    if (!ok) {
+    if (!ok)
+    {
         qDebug() << "Conversion failed for hex string:" << hexStr;
         return 0.0f;
     }
-    return *(reinterpret_cast<float*>(&value));
+    return *(reinterpret_cast<float *>(&value));
 }
 
-QString Widget::floatToHexString(float f) {
-    union {
+QString Widget::floatToHexString(float f)
+{
+    union
+    {
         float fValue;
         unsigned int uValue;
     } converter;
@@ -336,27 +329,29 @@ QString Widget::floatToHexString(float f) {
     return QString::fromStdString(ss.str());
 }
 
-float Widget::stringToFloat(const QString &str) {
+float Widget::stringToFloat(const QString &str)
+{
     bool ok;
     float value = str.toFloat(&ok);
-    if (!ok) {
+    if (!ok)
+    {
         qDebug() << "Conversion failed for string:" << str;
         return 0.0f;
     }
     return value;
 }
 
-unsigned short stringToUShort(const QString &str) {
+unsigned short stringToUShort(const QString &str)
+{
     bool ok;
     unsigned short value = str.toUShort(&ok);
-    if (!ok) {
+    if (!ok)
+    {
         qDebug() << "Conversion failed for string:" << str;
         return 0;
     }
     return value;
 }
-
-
 
 // 打开串口 槽函数
 void Widget::on_btnSwitchOn_clicked()
@@ -365,57 +360,87 @@ void Widget::on_btnSwitchOn_clicked()
     QSerialPort::BaudRate baudRate;
     QSerialPort::DataBits dataBits;
     QSerialPort::StopBits stopBits;
-    QSerialPort::Parity   checkBits;
+    QSerialPort::Parity checkBits;
 
     // 获取串口波特率
-    //baudRate = ui->cmbBaudRate->currentText().toInt();
-    if(ui->comboBox_Baudrate->currentText() == "1200"){
+    // baudRate = ui->cmbBaudRate->currentText().toInt();
+    if (ui->comboBox_Baudrate->currentText() == "1200")
+    {
         baudRate = QSerialPort::Baud1200;
-    }else if(ui->comboBox_Baudrate->currentText() == "2400"){
+    }
+    else if (ui->comboBox_Baudrate->currentText() == "2400")
+    {
         baudRate = QSerialPort::Baud2400;
-    }else if(ui->comboBox_Baudrate->currentText() == "4800"){
+    }
+    else if (ui->comboBox_Baudrate->currentText() == "4800")
+    {
         baudRate = QSerialPort::Baud4800;
-    }else if(ui->comboBox_Baudrate->currentText() == "9600"){
+    }
+    else if (ui->comboBox_Baudrate->currentText() == "9600")
+    {
         baudRate = QSerialPort::Baud9600;
-    }else if(ui->comboBox_Baudrate->currentText() == "115200"){
+    }
+    else if (ui->comboBox_Baudrate->currentText() == "115200")
+    {
         baudRate = QSerialPort::Baud115200;
-    }else{
-
+    }
+    else
+    {
     }
 
     // 获取串口数据位
-    if(ui->comboBox_Databits->currentText() == "5"){
+    if (ui->comboBox_Databits->currentText() == "5")
+    {
         dataBits = QSerialPort::Data5;
-    }else if(ui->comboBox_Databits->currentText() == "6"){
+    }
+    else if (ui->comboBox_Databits->currentText() == "6")
+    {
         dataBits = QSerialPort::Data6;
-    }else if(ui->comboBox_Databits->currentText() == "7"){
+    }
+    else if (ui->comboBox_Databits->currentText() == "7")
+    {
         dataBits = QSerialPort::Data7;
-    }else if(ui->comboBox_Databits->currentText() == "8"){
+    }
+    else if (ui->comboBox_Databits->currentText() == "8")
+    {
         dataBits = QSerialPort::Data8;
-    }else{
-
+    }
+    else
+    {
     }
 
     // 获取串口停止位
-    if(ui->comboBox_Stopbits->currentText() == "1"){
+    if (ui->comboBox_Stopbits->currentText() == "1")
+    {
         stopBits = QSerialPort::OneStop;
-    }else if(ui->comboBox_Stopbits->currentText() == "1.5"){
+    }
+    else if (ui->comboBox_Stopbits->currentText() == "1.5")
+    {
         stopBits = QSerialPort::OneAndHalfStop;
-    }else if(ui->comboBox_Stopbits->currentText() == "2"){
+    }
+    else if (ui->comboBox_Stopbits->currentText() == "2")
+    {
         stopBits = QSerialPort::TwoStop;
-    }else{
-
+    }
+    else
+    {
     }
 
     // 获取串口奇偶校验位
-    if(ui->comboBox_Parity->currentText() == "None"){
+    if (ui->comboBox_Parity->currentText() == "None")
+    {
         checkBits = QSerialPort::NoParity;
-    }else if(ui->comboBox_Parity->currentText() == "Odd"){
+    }
+    else if (ui->comboBox_Parity->currentText() == "Odd")
+    {
         checkBits = QSerialPort::OddParity;
-    }else if(ui->comboBox_Parity->currentText() == "Even"){
+    }
+    else if (ui->comboBox_Parity->currentText() == "Even")
+    {
         checkBits = QSerialPort::EvenParity;
-    }else{
-
+    }
+    else
+    {
     }
 
     // 想想用 substr strchr怎么从带有信息的字符串中提前串口号字符串
@@ -424,27 +449,30 @@ void Widget::on_btnSwitchOn_clicked()
     mySerialPort->setDataBits(dataBits);
     mySerialPort->setStopBits(stopBits);
     mySerialPort->setParity(checkBits);
-    //mySerialPort->setPortName(ui->cmbSerialPort->currentText());// 不匹配带有串口设备信息的文本
-    // 匹配带有串口设备信息的文本
+    // mySerialPort->setPortName(ui->cmbSerialPort->currentText());// 不匹配带有串口设备信息的文本
+    //  匹配带有串口设备信息的文本
     QString spTxt = ui->comboBox_Serialport->currentText();
-    spTxt = spTxt.section(':', 0, 0);//spTxt.mid(0, spTxt.indexOf(":"));
-    //qDebug() << spTxt;
+    spTxt = spTxt.section(':', 0, 0); // spTxt.mid(0, spTxt.indexOf(":"));
+    // qDebug() << spTxt;
     mySerialPort->setPortName(spTxt);
 
     // 根据初始化好的串口属性，打开串口
     // 如果打开成功，反转打开按钮显示和功能。打开失败，无变化，并且弹出错误对话框。
-    if(mySerialPort->open(QIODevice::ReadWrite) == true){
-        //QMessageBox::
-        // 让端口号下拉框不可选，避免误操作（选择功能不可用，控件背景为灰色）
+    if (mySerialPort->open(QIODevice::ReadWrite) == true)
+    {
+        // QMessageBox::
+        //  让端口号下拉框不可选，避免误操作（选择功能不可用，控件背景为灰色）
         ui->comboBox_Serialport->setEnabled(false);
         ui->comboBox_Baudrate->setEnabled(false);
         ui->comboBox_Stopbits->setEnabled(false);
         ui->comboBox_Databits->setEnabled(false);
         ui->comboBox_Parity->setEnabled(false);
-    }else{
+    }
+    else
+    {
         QMessageBox::critical(this, "错误提示", "串口打开失败！！！\r\n该串口可能被占用\r\n请选择正确的串口");
     }
-    qDebug() << "open" ;
+    qDebug() << "open";
 }
 
 // 关闭串口 槽函数
@@ -457,7 +485,6 @@ void Widget::on_btnSwitchOff_clicked()
     ui->comboBox_Stopbits->setEnabled(true);
     ui->comboBox_Databits->setEnabled(true);
     ui->comboBox_Parity->setEnabled(true);
-
 }
 
 // 串口数据接收，并做处理，显示在界面
@@ -466,42 +493,53 @@ void Widget::serialPortRead_Slot()
     recBuf = mySerialPort->readAll();
     // qDebug() << "触发接收函数" << recBuf;
 
-    if (ui->checkRec->checkState() == Qt::Unchecked) {
+    if (ui->checkRec->checkState() == Qt::Unchecked)
+    {
         // 字符串形式显示
-        if (addTimestamp) {
+        if (addTimestamp)
+        {
             QString timeStamp = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
             QString newText = QString("%1 RX: %2").arg(timeStamp).arg(QString::fromLocal8Bit(recBuf));
             ui->msg_Rec->appendPlainText(newText);
-        } else {
+        }
+        else
+        {
             ui->msg_Rec->appendPlainText(QString::fromLocal8Bit(recBuf));
         }
         qDebug() << "字符" << recBuf;
-    } else {
+    }
+    else
+    {
         // 16进制形式显示
         QString str1 = recBuf.toHex().toUpper();
         // qDebug() << "十六进制处理结果" << str1;
 
         QString str2;
-        for (int i = 0; i < str1.length(); i += 2) {
+        for (int i = 0; i < str1.length(); i += 2)
+        {
             str2 += str1.mid(i, 2);
             str2 += " ";
         }
-        if (addTimestamp) {
+        if (addTimestamp)
+        {
             QString timeStamp = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
             QString newText = QString("%1 Rx: %2").arg(timeStamp).arg(str2.trimmed());
             ui->msg_Rec->appendPlainText(newText);
-        } else {
+        }
+        else
+        {
             ui->msg_Rec->appendPlainText(str2.trimmed());
         }
-        qDebug() << "接收指令：" << str2.trimmed();  // 调整为输出16进制字符串
+        qDebug() << "接收指令：" << str2.trimmed(); // 调整为输出16进制字符串
     }
 
-    switch (READ_Command) {
+    switch (READ_Command)
+    {
     case MODBUS_ADD:
         READ_Command = 0;
         readID(recBuf);
-        ui->newID->setText("0"+QString::number(readID(recBuf)));
-        ui->ID->setText("0"+QString::number(readID(recBuf)));
+        ui->newID->setText("0" + QString::number(readID(recBuf)));
+        ui->ID->setText("0" + QString::number(readID(recBuf)));
 
         break;
     case NH4_Kb_REG:
@@ -583,8 +621,8 @@ void Widget::serialPortRead_Slot()
 
         break;
     case WIPER_REG:
-        READ_Command = 0;        
-        ui->WiperTime->setText(QString::number( readWiperTime(recBuf)));
+        READ_Command = 0;
+        ui->WiperTime->setText(QString::number(readWiperTime(recBuf)));
 
         break;
     case NH4_T:
@@ -641,22 +679,22 @@ void Widget::serialPortRead_Slot()
     ui->msg_Rec->moveCursor(QTextCursor::End);
 }
 
-// 发送按键槽函数，如果勾选16进制发送，按照asc2的16进制发送
 void Widget::on_btnSend_clicked()
 {
     QByteArray sendData;
 
     // 判断是否为16进制发送，将发送区全部的asc2转换为16进制字符串显示，发送的时候转换为16进制发送
-    if (ui->checkSend->checkState() == Qt::Unchecked) {
+    if (ui->checkSend->checkState() == Qt::Unchecked)
+    {
         // 字符串形式发送
         sendData = ui->msg_Send->toPlainText().toLocal8Bit();
         qDebug() << "发送字符串成功" << sendData;
-
-    } else {
+    }
+    else
+    {
         // 16进制发送
         sendData = QByteArray::fromHex(ui->msg_Send->toPlainText().toUtf8());
         qDebug() << "发送16进制成功" << sendData.toHex(' ');
-
     }
 
     mySerialPort->write(sendData);
@@ -681,7 +719,8 @@ void Widget::on_checkSend_stateChanged(int arg1)
 
     // 获取多选框状态，未选为0，选中为2
     // 为0时，多选框未被勾选，将先前的发送区的16进制字符串转换为asc2字符串
-    if(arg1 == 0){
+    if (arg1 == 0)
+    {
 
         QByteArray str1 = QByteArray::fromHex(txtBuf.toUtf8());
         // 文本控件清屏，显示新文本
@@ -689,15 +728,16 @@ void Widget::on_checkSend_stateChanged(int arg1)
         ui->msg_Send->insertPlainText(str1);
         // 移动光标到文本结尾
         ui->msg_Send->moveCursor(QTextCursor::End);
-
-    }else{// 多选框被勾选，将先前的发送区的asc2字符串转换为16进制字符串
+    }
+    else
+    { // 多选框被勾选，将先前的发送区的asc2字符串转换为16进制字符串
 
         QByteArray str1 = txtBuf.toUtf8().toHex().toUpper();
         // 添加空格
         QByteArray str2;
-        for(int i = 0; i<str1.length (); i+=2)
+        for (int i = 0; i < str1.length(); i += 2)
         {
-            str2 += str1.mid (i,2);
+            str2 += str1.mid(i, 2);
             str2 += " ";
         }
         // 文本控件清屏，显示新文本
@@ -705,7 +745,6 @@ void Widget::on_checkSend_stateChanged(int arg1)
         ui->msg_Send->insertPlainText(str2);
         // 移动光标到文本结尾
         ui->msg_Send->moveCursor(QTextCursor::End);
-
     }
 }
 
@@ -715,8 +754,8 @@ void Widget::on_checkRec_stateChanged(int arg1)
     QString txtBuf = ui->msg_Rec->toPlainText();
 
     // 获取多选框状态，未选为0，选中为2
-    // 为0时，多选框未被勾选，接收区先前接收的16进制数据转换为asc2字符串格式
-    if(arg1 == 0){
+    if (arg1 == 0)
+    {
 
         QByteArray str1 = QByteArray::fromHex(txtBuf.toUtf8());
         // 文本控件清屏，显示新文本
@@ -724,15 +763,16 @@ void Widget::on_checkRec_stateChanged(int arg1)
         ui->msg_Rec->insertPlainText(str1);
         // 移动光标到文本结尾
         ui->msg_Rec->moveCursor(QTextCursor::End);
-
-    }else{// 不为0时，多选框被勾选，接收区先前接收asc2字符串转换为16进制显示
+    }
+    else
+    { // 不为0时，多选框被勾选，接收区先前接收asc2字符串转换为16进制显示
 
         QByteArray str1 = txtBuf.toUtf8().toHex().toUpper();
         // 添加空格
         QByteArray str2;
-        for(int i = 0; i<str1.length (); i+=2)
+        for (int i = 0; i < str1.length(); i += 2)
         {
-            str2 += str1.mid (i,2);
+            str2 += str1.mid(i, 2);
             str2 += " ";
         }
         // 文本控件清屏，显示新文本
@@ -740,20 +780,18 @@ void Widget::on_checkRec_stateChanged(int arg1)
         ui->msg_Rec->insertPlainText(str2);
         // 移动光标到文本结尾
         ui->msg_Rec->moveCursor(QTextCursor::End);
-
     }
 }
 
 void Widget::on_checkTime_stateChanged(int arg1)
 {
     // 设置标志变量
-    addTimestamp = (arg1!= 0);
+    addTimestamp = (arg1 != 0);
 }
-
 
 void Widget::processIDResponse()
 {
-    qDebug() << "触发查询ID" ;
+    qDebug() << "触发查询ID";
     QByteArray recBuf = mySerialPort->readAll();
 
     // 判断是否为读取 ID 的响应
@@ -765,125 +803,117 @@ void Widget::processIDResponse()
     }
 }
 
-
 /*  MODBUS获取地址*/
 void Widget::on_getID_clicked()
 {
     READ_Command = 0X000E;
-    request = readRequestWithCRC("ff",READ_COMMAND,MODBUS_ADD,1);
+    request = readRequestWithCRC("ff", READ_COMMAND, MODBUS_ADD, 1);
     qDebug() << "发送帧:" << request;
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
-
 }
 
-
-
 /*  K/B值查询 按钮点击函数集*/
-//NH4+ 查询K/B
+// NH4+ 查询K/B
 void Widget::on_getNH4p_clicked()
 {
     READ_Command = 0x00A4;
-    request = readRequestWithCRC(ui->newID->text(),READ_COMMAND,NH4_Kb_REG,4);
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, NH4_Kb_REG, 4);
     qDebug() << "发送帧:" << request;
 
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
 
-//K+ 查询K/B
+// K+ 查询K/B
 void Widget::on_getK_clicked()
 {
     READ_Command = 0x00A8;
-    request = readRequestWithCRC(ui->newID->text(),READ_COMMAND,K_Kb_REG,4);
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, K_Kb_REG, 4);
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
 
-//ORP 查询K/B
+// ORP 查询K/B
 void Widget::on_getORP_clicked()
 {
     READ_Command = 0x00AC;
-    request = readRequestWithCRC(ui->newID->text(),READ_COMMAND,ORP_Kb_REG,4);
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, ORP_Kb_REG, 4);
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
 
-//TOC 查询K/B
+// TOC 查询K/B
 void Widget::on_getTOCkb_clicked()
 {
     READ_Command = 0x00B0;
-    request = readRequestWithCRC(ui->newID->text(),READ_COMMAND,TOC_Kb_REG,4);
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, TOC_Kb_REG, 4);
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
-//SAC 查询K/B
+// SAC 查询K/B
 void Widget::on_getSACkb_clicked()
 {
     READ_Command = 0x00B4;
-    request = readRequestWithCRC(ui->newID->text(),READ_COMMAND,SAC_Kb_REG,4);
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, SAC_Kb_REG, 4);
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
 
-//BOD 查询K/B
+// BOD 查询K/B
 void Widget::on_getBODkb_clicked()
 {
     READ_Command = 0x00B8;
-    request = readRequestWithCRC(ui->newID->text(),READ_COMMAND,BOD_Kb_REG,4);
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, BOD_Kb_REG, 4);
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
-//T% 查询K/B
+// T% 查询K/B
 void Widget::on_getTab_clicked()
 {
     READ_Command = 0x00BC;
-    request = readRequestWithCRC(ui->newID->text(),READ_COMMAND,T_Kb_REG,4);
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, T_Kb_REG, 4);
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
 
-//TUR 查询K/B
+// TUR 查询K/B
 void Widget::on_getTURkb_clicked()
 {
     READ_Command = 0x00C0;
-    request = readRequestWithCRC(ui->newID->text(),READ_COMMAND,TUR_Kb_REG,4);
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, TUR_Kb_REG, 4);
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
-//pH 查询K/B
+// pH 查询K/B
 void Widget::on_getPH_clicked()
 {
     READ_Command = 0x00C4;
-    request = readRequestWithCRC(ui->newID->text(),READ_COMMAND,PH_Kb_REG,4);
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, PH_Kb_REG, 4);
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
 
-//COD 查询K/B
+// COD 查询K/B
 void Widget::on_getCODkb_clicked()
 {
     READ_Command = 0x00C4;
-    request = readRequestWithCRC(ui->newID->text(),READ_COMMAND,READ_Command,4);
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, READ_Command, 4);
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
 
 void Widget::on_getSN_clicked()
 {
     READ_Command = 0x0009;
-    request = readRequestWithCRC(ui->newID->text(),READ_COMMAND,SN_REG,4);
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, SN_REG, 4);
     qDebug() << "on_getSN_clicked:" << request;
 
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
 
-
-
 void Widget::on_getHUMI_clicked()
 {
     READ_Command = 0x0056;
-    request = readRequestWithCRC(ui->newID->text(),READ_COMMAND,HUMI_REG,2);
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, HUMI_REG, 2);
     qDebug() << "on_getHUMI_clicked:" << request;
 
     mySerialPort->write(QByteArray::fromHex(request.toUpper().toUtf8()));
-
-
 }
 
 void Widget::on_getNH4_ALL_clicked()
 {
     READ_Command = 0X0048;
-    request = readRequestWithCRC(ui->newID->text(),READ_COMMAND,NH4_ALL,20);
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, NH4_ALL, 20);
     qDebug() << "on_getNH4_ALL_clicked:" << request;
 
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
@@ -892,7 +922,7 @@ void Widget::on_getNH4_ALL_clicked()
 void Widget::on_getNH4_T_clicked()
 {
     READ_Command = 0X00D0;
-    request = readRequestWithCRC(ui->newID->text(),READ_COMMAND,NH4_T,6);
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, NH4_T, 6);
     qDebug() << "on_getNH4_T_clicked:" << request;
 
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
@@ -900,7 +930,7 @@ void Widget::on_getNH4_T_clicked()
 void Widget::on_getK_T_clicked()
 {
     READ_Command = 0X00D6;
-    request = readRequestWithCRC(ui->newID->text(),READ_COMMAND,K_T,6);
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, K_T, 6);
     qDebug() << "on_getK_T_clicked:" << request;
 
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
@@ -909,7 +939,7 @@ void Widget::on_getK_T_clicked()
 void Widget::on_getK_Comp_clicked()
 {
     READ_Command = 0X007c;
-    request = readRequestWithCRC(ui->newID->text(),READ_COMMAND,Kp_comp,2);
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, Kp_comp, 2);
     qDebug() << "on_getK_T_clicked:" << request;
 
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
@@ -918,14 +948,14 @@ void Widget::on_getK_Comp_clicked()
 void Widget::on_getBoardTemp_clicked()
 {
     READ_Command = 0X0030;
-    request = readRequestWithCRC(ui->newID->text(),READ_COMMAND,TEMP_REG,2);
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, TEMP_REG, 2);
 
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
 void Widget::on_getCOND_clicked()
 {
     READ_Command = 0X0036;
-    request = readRequestWithCRC(ui->newID->text(),READ_COMMAND,COND_REG,8);
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, COND_REG, 8);
 
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
@@ -933,7 +963,7 @@ void Widget::on_getCOND_clicked()
 void Widget::on_getCONDkb_clicked()
 {
     READ_Command = 0X0060;
-    request = readRequestWithCRC(ui->newID->text(),READ_COMMAND,CALIB_COE_REG,4);
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, CALIB_COE_REG, 4);
 
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
@@ -941,26 +971,31 @@ void Widget::on_getCONDkb_clicked()
 void Widget::on_getTDSkb_clicked()
 {
     READ_Command = 0X0040;
-    request = readRequestWithCRC(ui->newID->text(),READ_COMMAND,TDS_REG,4);
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, TDS_REG, 4);
 
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
 void Widget::on_getWaterTemp_clicked()
 {
-
-
 }
-QString Widget::reverseFourOctets(const QString &data) {
+
+
+QString Widget::reverseFourOctets(const QString &data)
+{
     QString reversed;
-    for (int i = data.length() - 2; i >= 0; i -= 2) {
+    for (int i = data.length() - 2; i >= 0; i -= 2)
+    {
         reversed += data.mid(i, 2);
     }
     return reversed;
 }
+
+
+
 void Widget::readDataKB(const QByteArray &data)
 {
     QString data1_smallend = data.toHex().toUpper().mid(6, 8);
-    QString data2_smallend   = data.toHex().toUpper().mid(14, 8);
+    QString data2_smallend = data.toHex().toUpper().mid(14, 8);
 
     qDebug() << "reversed data1 " << reverseFourOctets(data1_smallend);
     qDebug() << "reversed data2: " << reverseFourOctets(data2_smallend);
@@ -973,19 +1008,23 @@ void Widget::readDataKB(const QByteArray &data)
 
     qDebug() << "stringK: " << stringK;
     qDebug() << "stringB: " << stringB;
-
 }
+
+
+
 void Widget::readHumi(const QByteArray &data)
 {
     QString data1 = data.toHex().toUpper().mid(6, 8);
     stringK = QString::number(hexStringToFloat(reverseFourOctets(data1)));
 }
 
+
 void Widget::readTEMP(const QByteArray &data)
 {
     QString data1 = data.toHex().toUpper().mid(6, 8);
     stringK = QString::number(hexStringToFloat(reverseFourOctets(data1)));
 }
+
 
 void Widget::readNH4_T(const QByteArray &data)
 {
@@ -999,7 +1038,6 @@ void Widget::readNH4_T(const QByteArray &data)
     qDebug() << "data1: " << data1;
     qDebug() << "data2: " << data2;
     qDebug() << "data3: " << data3;
-
 }
 
 void Widget::readNH4_ALL(const QByteArray &data)
@@ -1024,8 +1062,6 @@ void Widget::readNH4_ALL(const QByteArray &data)
     DATA4 = QString::number(hexStringToFloat(reverseFourOctets(data4)));
     DATA5 = QString::number(hexStringToFloat(reverseFourOctets(data5)));
     DATA6 = QString::number(hexStringToFloat(reverseFourOctets(data6)));
-
-
 }
 
 int Widget::readID(const QByteArray &data)
@@ -1034,11 +1070,10 @@ int Widget::readID(const QByteArray &data)
     qDebug() << "ID: " << data1;
     bool ok;
     int value = data1.toInt(&ok, 16);
-    if (ok) {
+    if (ok)
         qDebug() << "Converted integer value: " << value;
-    } else {
+    else
         qDebug() << "Conversion failed.";
-    }
     return value;
 }
 
@@ -1048,11 +1083,10 @@ int Widget::readWiperTime(const QByteArray &data)
     qDebug() << "Wiper time: " << data1;
     bool ok;
     int value = data1.toInt(&ok, 16);
-    if (ok) {
+    if (ok)
         qDebug() << "Converted integer value: " << value;
-    } else {
+    else
         qDebug() << "Conversion failed.";
-    }
     return value;
 }
 
@@ -1065,13 +1099,13 @@ void Widget::readSN(const QByteArray &data)
     asciiSN.clear();
 
     // 将字节数组解析为 ASCII 字符
-    for (char byte : byteArray) {
+    for (char byte : byteArray)
+    {
         asciiSN += QChar(byte);
     }
 
     qDebug() << "ASCII SN: " << asciiSN;
 }
-
 
 QString Widget::appendKB(QString data1, QString data2)
 {
@@ -1086,34 +1120,27 @@ QString Widget::appendKB(QString data1, QString data2)
 
     return reverseFourOctets(stringK).append(reverseFourOctets(stringB));
 }
-QString Widget::writeRequestWithCRC_M(QString address, int function, int REG, int quality, int length,QString data)
+QString Widget::writeRequestWithCRC_M(QString address, int function, int REG, int quality, int length, QString data)
 {
-    QString request= address.append(intToHexWithPadding(function,2)).
-                      append(intToHexWithPadding(REG, 4)).
-                      append(intToHexWithPadding(quality, 4)).
-                      append(intToHexWithPadding(length, 2)).
-                      append(data);
+    QString request = address.append(intToHexWithPadding(function, 2)).append(intToHexWithPadding(REG, 4)).append(intToHexWithPadding(quality, 4)).append(intToHexWithPadding(length, 2)).append(data);
     qDebug() << "write request:" << request;
 
     return crcCalculation(request);
 }
 QString Widget::writeRequestWithCRC_S(QString address, int function, int REG, QString data)
 {
-    QString request= address.append(intToHexWithPadding(function,2)).
-                      append(intToHexWithPadding(REG, 4)).
-                      append(data);
+    QString request = address.append(intToHexWithPadding(function, 2)).append(intToHexWithPadding(REG, 4)).append(data);
     qDebug() << "write request:" << request;
 
     return crcCalculation(request);
 }
 
-//NH4+ K/B值修改
+// NH4+ K/B值修改
 void Widget::on_chgNH4p_clicked()
 {
     // Modbus_pre= "FF1000A4000408";
     QString dataToWrite = appendKB(ui->NH4p_K->text(), ui->NH4p_B->text());
     qDebug() << "dataToWrite" << dataToWrite;
-
 
     request = writeRequestWithCRC_M(ui->newID->text(), WRITEM_COMMAND, NH4_Kb_REG, 4, 8, dataToWrite);
     qDebug() << "write request with crc:" << request;
@@ -1121,7 +1148,7 @@ void Widget::on_chgNH4p_clicked()
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
 
-//K+ K/B值修改
+// K+ K/B值修改
 void Widget::on_chgK_clicked()
 {
     // Modbus_pre= "FF1000A8000408";
@@ -1130,9 +1157,10 @@ void Widget::on_chgK_clicked()
     request = writeRequestWithCRC_M(ui->newID->text(), WRITEM_COMMAND, K_Kb_REG, 4, 8, dataToWrite);
     qDebug() << "write request with crc:" << request;
 
-    mySerialPort->write(QByteArray::fromHex(request.toUtf8()));}
+    mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
+}
 
-//orp+ K/B值修改
+// orp+ K/B值修改
 void Widget::on_chgORP_clicked()
 {
     // Modbus_pre= "FF1000AC000408";
@@ -1143,7 +1171,7 @@ void Widget::on_chgORP_clicked()
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
 
-//ph K/B值修改
+// ph K/B值修改
 void Widget::on_chgPH_clicked()
 {
     // Modbus_pre= "FF1000C4000408";
@@ -1168,75 +1196,66 @@ void Widget::on_chgCOD_clicked()
 {
     // Modbus_pre= "FF1000C4000408";
     QString dataToWrite = appendKB(ui->COD_K->text(), ui->COD_B->text());
-    request = writeRequestWithCRC_M(ui->newID->text(), WRITEM_COMMAND, TOC_Kb_REG, 4, 8, dataToWrite);//需要改寄存器
+    request = writeRequestWithCRC_M(ui->newID->text(), WRITEM_COMMAND, TOC_Kb_REG, 4, 8, dataToWrite); // 需要改寄存器
     qDebug() << "write request with crc:" << request;
 
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
-
 
 void Widget::on_chgBOD_clicked()
 {
     // Modbus_pre= "FF1000B8000408";
     QString dataToWrite = appendKB(ui->BOD_K->text(), ui->BOD_B->text());
-    request = writeRequestWithCRC_M(ui->newID->text(), WRITEM_COMMAND, BOD_Kb_REG, 4, 8, dataToWrite);//需要改寄存器
+    request = writeRequestWithCRC_M(ui->newID->text(), WRITEM_COMMAND, BOD_Kb_REG, 4, 8, dataToWrite); // 需要改寄存器
     qDebug() << "write request with crc:" << request;
 
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
-
-
 
 void Widget::on_chgTUR_clicked()
 {
     // Modbus_pre= "FF1000C0000408";
     QString dataToWrite = appendKB(ui->TUR_K->text(), ui->TUR_B->text());
-    request = writeRequestWithCRC_M(ui->newID->text(), WRITEM_COMMAND, TUR_Kb_REG, 4, 8, dataToWrite);//需要改寄存器
+    request = writeRequestWithCRC_M(ui->newID->text(), WRITEM_COMMAND, TUR_Kb_REG, 4, 8, dataToWrite); // 需要改寄存器
     qDebug() << "write request with crc:" << request;
 
-    mySerialPort->write(QByteArray::fromHex(request.toUtf8()));}
-
+    mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
+}
 
 void Widget::on_chgSAC_clicked()
 {
     // Modbus_pre= "FF1000B4000408";
     QString dataToWrite = appendKB(ui->SAC_K->text(), ui->SAC_B->text());
-    request = writeRequestWithCRC_M(ui->newID->text(), WRITEM_COMMAND, SAC_Kb_REG, 4, 8, dataToWrite);//需要改寄存器
+    request = writeRequestWithCRC_M(ui->newID->text(), WRITEM_COMMAND, SAC_Kb_REG, 4, 8, dataToWrite); // 需要改寄存器
     qDebug() << "write request with crc:" << request;
 
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
-
 
 void Widget::on_chgT_clicked()
 {
     // Modbus_pre= "FF1000BC000408";
     QString dataToWrite = appendKB(ui->T_K->text(), ui->T_B->text());
-    request = writeRequestWithCRC_M(ui->newID->text(), WRITEM_COMMAND, T_Kb_REG, 4, 8, dataToWrite);//需要改寄存器
+    request = writeRequestWithCRC_M(ui->newID->text(), WRITEM_COMMAND, T_Kb_REG, 4, 8, dataToWrite); // 需要改寄存器
     qDebug() << "write request with crc:" << request;
 
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
 
-
-
-
-
-
 void Widget::on_getWiperTime_clicked()
 {
     READ_Command = 0x001A;
-    request = readRequestWithCRC(ui->newID->text(),READ_COMMAND,WIPER_REG,1);
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, WIPER_REG, 1);
     qDebug() << "WIPER:" << request;
 
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
 
-
 void Widget::on_chgWiperTime_clicked()
 {
     QString inputText = ui->chgWipertime->toPlainText();
-    if (inputText.isEmpty()) {
+    if (inputText.isEmpty())
+    {
         // 使用 QMessageBox 显示提醒信息
         QMessageBox::warning(this, "提示", "请先输入要更改的时间。");
         return;
@@ -1244,7 +1263,7 @@ void Widget::on_chgWiperTime_clicked()
 
     QString dataToWrite = ushortToHex(stringToUShort(inputText));
 
-    request = writeRequestWithCRC_S(ui->newID->text(), WRITES_COMMAND, WIPER_REG, dataToWrite);//需要改寄存器
+    request = writeRequestWithCRC_S(ui->newID->text(), WRITES_COMMAND, WIPER_REG, dataToWrite); // 需要改寄存器
     qDebug() << "write request with crc:" << request;
 
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
@@ -1252,12 +1271,11 @@ void Widget::on_chgWiperTime_clicked()
 
 void Widget::on_startWiper_clicked()
 {
-    request = writeRequestWithCRC_S(ui->newID->text(),WRITES_COMMAND,WIPER_START_REG,"0001");
+    request = writeRequestWithCRC_S(ui->newID->text(), WRITES_COMMAND, WIPER_START_REG, "0001");
     qDebug() << "WIPER:" << request;
 
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
-
 
 void Widget::on_chgNH4_T_clicked()
 {
@@ -1267,13 +1285,11 @@ void Widget::on_chgNH4_T_clicked()
 
     qDebug() << "dataToWrite" << dataToWrite;
 
-
     request = writeRequestWithCRC_M(ui->newID->text(), WRITEM_COMMAND, 0X00D0, 6, 12, dataToWrite);
     qDebug() << "write request with crc:" << request;
 
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
-
 
 void Widget::on_chgK_T_clicked()
 {
@@ -1283,13 +1299,11 @@ void Widget::on_chgK_T_clicked()
 
     qDebug() << "dataToWrite" << dataToWrite;
 
-
     request = writeRequestWithCRC_M(ui->newID->text(), WRITEM_COMMAND, 0X00D6, 6, 12, dataToWrite);
     qDebug() << "write request with crc:" << request;
 
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
-
 
 void Widget::on_chgK_Comp_clicked()
 {
@@ -1300,12 +1314,3 @@ void Widget::on_chgK_Comp_clicked()
 
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
-
-
-
-
-
-
-
-
-

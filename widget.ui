@@ -667,7 +667,7 @@ border-image: url(:/icons/to.png);</string>
     </rect>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="COD">
     <attribute name="title">
@@ -3587,7 +3587,7 @@ border-image: url(:/icons/to.png);</string>
       </layout>
      </widget>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>21</x>
@@ -6263,7 +6263,7 @@ border-image: url(:/icons/to.png);</string>
    <property name="geometry">
     <rect>
      <x>350</x>
-     <y>320</y>
+     <y>310</y>
      <width>591</width>
      <height>211</height>
     </rect>
