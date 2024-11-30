@@ -28,10 +28,16 @@ Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget)
     // this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint);
     // isLeftPressed = false;
     // this->setMouseTracking(true);
+
+    model = new QStandardItemModel(this);
+    ui->tableview_Sensor->setModel(model);
 }
 
 Widget::~Widget()
 {
+    if (timer) {
+        delete timer;
+    }
     delete ui;
 }
 
@@ -495,17 +501,11 @@ void Widget::serialPortRead_Slot()
 
     if (ui->checkRec->checkState() == Qt::Unchecked)
     {
-        // 字符串形式显示
-        if (addTimestamp)
-        {
-            QString timeStamp = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
-            QString newText = QString("%1 RX: %2").arg(timeStamp).arg(QString::fromLocal8Bit(recBuf));
-            ui->msg_Rec->appendPlainText(newText);
-        }
-        else
-        {
-            ui->msg_Rec->appendPlainText(QString::fromLocal8Bit(recBuf));
-        }
+
+        QString timeStamp = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+        QString newText = QString("%1 RX: %2").arg(timeStamp).arg(QString::fromLocal8Bit(recBuf));
+        ui->msg_Rec->appendPlainText(newText);
+
         qDebug() << "字符" << recBuf;
     }
     else
@@ -520,16 +520,12 @@ void Widget::serialPortRead_Slot()
             str2 += str1.mid(i, 2);
             str2 += " ";
         }
-        if (addTimestamp)
-        {
-            QString timeStamp = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
-            QString newText = QString("%1 Rx: %2").arg(timeStamp).arg(str2.trimmed());
-            ui->msg_Rec->appendPlainText(newText);
-        }
-        else
-        {
-            ui->msg_Rec->appendPlainText(str2.trimmed());
-        }
+
+        QString timeStamp = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
+        QString newText = QString("%1 Rx: %2").arg(timeStamp).arg(str2.trimmed());
+        ui->msg_Rec->appendPlainText(newText);
+
+
         qDebug() << "接收指令：" << str2.trimmed(); // 调整为输出16进制字符串
     }
 
@@ -549,15 +545,7 @@ void Widget::serialPortRead_Slot()
         ui->NH4p_B->setText(stringB);
         break;
     case NH4_ALL:
-        READ_Command = 0;
-        readNH4_ALL(recBuf);
-        ui->NH4_TEMP->setText(DATA1);
-        ui->pH->setText(DATA2);
-        ui->ORP->setText(DATA3);
-        ui->NH4_PLUS->setText(DATA4);
-        ui->K_PLUS->setText(DATA5);
-        ui->NH4_N->setText(DATA6);
-
+        handleNH4_ALL();
         break;
     case K_Kb_REG:
         READ_Command = 0;
@@ -679,74 +667,74 @@ void Widget::serialPortRead_Slot()
     ui->msg_Rec->moveCursor(QTextCursor::End);
 }
 
-void Widget::on_btnSend_clicked()
-{
-    QByteArray sendData;
+// void Widget::on_btnSend_clicked()
+// {
+//     QByteArray sendData;
 
-    // 判断是否为16进制发送，将发送区全部的asc2转换为16进制字符串显示，发送的时候转换为16进制发送
-    if (ui->checkSend->checkState() == Qt::Unchecked)
-    {
-        // 字符串形式发送
-        sendData = ui->msg_Send->toPlainText().toLocal8Bit();
-        qDebug() << "发送字符串成功" << sendData;
-    }
-    else
-    {
-        // 16进制发送
-        sendData = QByteArray::fromHex(ui->msg_Send->toPlainText().toUtf8());
-        qDebug() << "发送16进制成功" << sendData.toHex(' ');
-    }
+//     // 判断是否为16进制发送，将发送区全部的asc2转换为16进制字符串显示，发送的时候转换为16进制发送
+//     if (ui->checkSend->checkState() == Qt::Unchecked)
+//     {
+//         // 字符串形式发送
+//         sendData = ui->msg_Send->toPlainText().toLocal8Bit();
+//         qDebug() << "发送字符串成功" << sendData;
+//     }
+//     else
+//     {
+//         // 16进制发送
+//         sendData = QByteArray::fromHex(ui->msg_Send->toPlainText().toUtf8());
+//         qDebug() << "发送16进制成功" << sendData.toHex(' ');
+//     }
 
-    mySerialPort->write(sendData);
-    qDebug() << sendData;
-}
+//     mySerialPort->write(sendData);
+//     qDebug() << sendData;
+// }
 
-void Widget::on_btnClearRec_clicked()
-{
-    ui->msg_Rec->clear();
-}
+// void Widget::on_btnClearRec_clicked()
+// {
+//     ui->msg_Rec->clear();
+// }
 
-void Widget::on_btnClearSend_clicked()
-{
-    ui->msg_Send->clear();
-}
+// void Widget::on_btnClearSend_clicked()
+// {
+//     ui->msg_Send->clear();
+// }
 
 // 先前发送区的部分在多选框状态转换槽函数中进行转换。（最好多选框和发送区组成一个自定义控件，方便以后调用）
-void Widget::on_checkSend_stateChanged(int arg1)
-{
-    // 获取文本字符串
-    QString txtBuf = ui->msg_Send->toPlainText();
+// void Widget::on_checkSend_stateChanged(int arg1)
+// {
+//     // 获取文本字符串
+//     QString txtBuf = ui->msg_Send->toPlainText();
 
-    // 获取多选框状态，未选为0，选中为2
-    // 为0时，多选框未被勾选，将先前的发送区的16进制字符串转换为asc2字符串
-    if (arg1 == 0)
-    {
+//     // 获取多选框状态，未选为0，选中为2
+//     // 为0时，多选框未被勾选，将先前的发送区的16进制字符串转换为asc2字符串
+//     if (arg1 == 0)
+//     {
 
-        QByteArray str1 = QByteArray::fromHex(txtBuf.toUtf8());
-        // 文本控件清屏，显示新文本
-        ui->msg_Send->clear();
-        ui->msg_Send->insertPlainText(str1);
-        // 移动光标到文本结尾
-        ui->msg_Send->moveCursor(QTextCursor::End);
-    }
-    else
-    { // 多选框被勾选，将先前的发送区的asc2字符串转换为16进制字符串
+//         QByteArray str1 = QByteArray::fromHex(txtBuf.toUtf8());
+//         // 文本控件清屏，显示新文本
+//         ui->msg_Send->clear();
+//         ui->msg_Send->insertPlainText(str1);
+//         // 移动光标到文本结尾
+//         ui->msg_Send->moveCursor(QTextCursor::End);
+//     }
+//     else
+//     { // 多选框被勾选，将先前的发送区的asc2字符串转换为16进制字符串
 
-        QByteArray str1 = txtBuf.toUtf8().toHex().toUpper();
-        // 添加空格
-        QByteArray str2;
-        for (int i = 0; i < str1.length(); i += 2)
-        {
-            str2 += str1.mid(i, 2);
-            str2 += " ";
-        }
-        // 文本控件清屏，显示新文本
-        ui->msg_Send->clear();
-        ui->msg_Send->insertPlainText(str2);
-        // 移动光标到文本结尾
-        ui->msg_Send->moveCursor(QTextCursor::End);
-    }
-}
+//         QByteArray str1 = txtBuf.toUtf8().toHex().toUpper();
+//         // 添加空格
+//         QByteArray str2;
+//         for (int i = 0; i < str1.length(); i += 2)
+//         {
+//             str2 += str1.mid(i, 2);
+//             str2 += " ";
+//         }
+//         // 文本控件清屏，显示新文本
+//         ui->msg_Send->clear();
+//         ui->msg_Send->insertPlainText(str2);
+//         // 移动光标到文本结尾
+//         ui->msg_Send->moveCursor(QTextCursor::End);
+//     }
+// }
 
 void Widget::on_checkRec_stateChanged(int arg1)
 {
@@ -916,7 +904,14 @@ void Widget::on_getNH4_ALL_clicked()
     request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, NH4_ALL, 20);
     qDebug() << "on_getNH4_ALL_clicked:" << request;
 
-    mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
+    // 创建定时器并连接槽函数
+    timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, [this](){
+        READ_Command = 0X0048;
+
+        mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
+    });
+    timer->start(2000);
 }
 
 void Widget::on_getNH4_T_clicked()
@@ -978,6 +973,7 @@ void Widget::on_getTDSkb_clicked()
 void Widget::on_getWaterTemp_clicked()
 {
 }
+
 
 
 QString Widget::reverseFourOctets(const QString &data)
@@ -1143,6 +1139,18 @@ void Widget::on_chgNH4p_clicked()
     qDebug() << "dataToWrite" << dataToWrite;
 
     request = writeRequestWithCRC_M(ui->newID->text(), WRITEM_COMMAND, NH4_Kb_REG, 4, 8, dataToWrite);
+    qDebug() << "write request with crc:" << request;
+
+    mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
+}
+//ID修改
+void Widget::on_setID_clicked()
+{
+    // Modbus_pre= "FF1000A4000408";
+    QString dataToWrite = appendKB("FF", ui->NH4p_B->text());
+    qDebug() << "dataToWrite" << dataToWrite;
+
+    request = writeRequestWithCRC_M("FF", WRITEM_COMMAND, NH4_Kb_REG, 4, 8, dataToWrite);
     qDebug() << "write request with crc:" << request;
 
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
@@ -1314,3 +1322,102 @@ void Widget::on_chgK_Comp_clicked()
 
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
+
+void Widget::on_stopNH4_ALL_clicked()
+{
+    if (timer) {
+        timer->stop();
+        delete timer;
+        timer = nullptr;
+    }
+}
+
+
+void Widget::on_btnClearRec_clicked()
+{
+    ui->msg_Rec->clear();
+
+}
+
+void Widget::handleNH4_ALL()
+{
+    READ_Command = 0;
+    readNH4_ALL(recBuf);
+
+    if (model->rowCount() == 0) {
+        model->setHorizontalHeaderLabels({"时间", "温度", "pH", "ORP", "NH4+", "K+", "NH4_N"});
+    }
+
+    ui->NH4_TEMP->setText(DATA1);
+    ui->pH->setText(DATA2);
+    ui->ORP->setText(DATA3);
+    ui->NH4_PLUS->setText(DATA4);
+    ui->K_PLUS->setText(DATA5);
+    ui->NH4_N->setText(DATA6);
+
+    // 获取当前时间
+    QString timeStamp = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+
+    // 创建一个新行并添加数据
+    int row = model->rowCount();
+    model->insertRow(row);
+
+    model->setData(model->index(row, 0), timeStamp);
+    model->setData(model->index(row, 1), DATA1);
+    model->setData(model->index(row, 2), DATA2);
+    model->setData(model->index(row, 3), DATA3);
+    model->setData(model->index(row, 4), DATA4);
+    model->setData(model->index(row, 5), DATA5);
+    model->setData(model->index(row, 6), DATA6);
+}
+
+void Widget::on_btnClearRec_4_clicked()
+{
+    model->clear();
+}
+
+
+
+void Widget::on_exportData_clicked()
+{
+    // 打开文件对话框，让用户选择保存 CSV 文件的位置
+    QString fileName = QFileDialog::getSaveFileName(this,
+                                                    tr("Export CSV"), "",
+                                                    tr("CSV Files (*.csv);;All Files (*)"));
+
+    if (fileName.isEmpty())
+        return;
+
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::critical(this, tr("Error"),
+                              tr("Cannot open file %1 for writing: %2.")
+                                  .arg(fileName)
+                                  .arg(file.errorString()));
+        return;
+    }
+
+    QTextStream out(&file);
+
+    // 写入表头
+    QStringList headers;
+    for (int i = 0; i < model->columnCount(); ++i) {
+        headers << model->headerData(i, Qt::Horizontal).toString();
+    }
+    out << headers.join(",") << "\n";
+
+    // 写入数据
+    for (int row = 0; row < model->rowCount(); ++row) {
+        QStringList rowData;
+        for (int col = 0; col < model->columnCount(); ++col) {
+            QVariant data = model->data(model->index(row, col));
+            rowData << data.toString();
+        }
+        out << rowData.join(",") << "\n";
+    }
+
+    file.close();
+    QMessageBox::information(this, tr("Export Successful"),
+                             tr("Data has been exported to %1.").arg(fileName));
+}
+

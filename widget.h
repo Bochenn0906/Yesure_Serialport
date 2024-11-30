@@ -11,6 +11,14 @@
 #include <QtSerialBus>
 #include <QModbusDataUnit>
 #include <QModbusClient>
+#include <QTimer>
+#include <QTableView>
+#include <QStandardItemModel>
+#include <QFileDialog>
+#include <QFile>
+#include <QTextStream>
+#include <QMessageBox>
+
 #include <iostream>
 #include <iomanip>
 #include <sstream>
@@ -74,20 +82,15 @@ class Widget : public QWidget
 public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
-
     QString request;
-
     unsigned int READ_Command;
     unsigned int SensorKB_change;
-
     QString Device_id;
     QString Modbus_pre;
     QString value_K;
     QString value_B;
-
     QString stringK;
     QString stringB;
-
     QString asciiSN;
     QString DATA1;
     QString DATA2;
@@ -120,6 +123,15 @@ public:
     QString writeRequestWithCRC_M(QString address, int function, int REG, int quality, int length,QString data);
     QString writeRequestWithCRC_S(QString address, int function, int REG,QString data);
     QString reverseFourOctets(const QString &data);
+
+    struct SensorData{
+        QString strName;
+        QString strData;
+
+    };
+
+    void handleNH4_ALL();
+
 private:
     Ui::Widget *ui;    
     QSerialPort *mySerialPort;
@@ -131,7 +143,11 @@ private:
     QPoint mouseOffset;
     Location location;
     void setCursorShape(const QPoint& point);
+    QStandardItemModel *model;
 
+    QTimer *timer;
+    QTableView *tableview_Sensor;
+    QString timeStamp;
 protected:
     // void mousePressEvent(QMouseEvent *event);
     // void mouseMoveEvent(QMouseEvent *event);
@@ -140,10 +156,10 @@ private slots:
     void on_btnSwitchOn_clicked();
     void on_btnSwitchOff_clicked();
     void serialPortRead_Slot();
-    void on_btnSend_clicked();
-    void on_btnClearRec_clicked();
-    void on_btnClearSend_clicked();
-    void on_checkSend_stateChanged(int arg1);
+    // void on_btnSend_clicked();
+    // void on_btnClearRec_clicked();
+    // void on_btnClearSend_clicked();
+    // void on_checkSend_stateChanged(int arg1);
     void on_checkRec_stateChanged(int arg1);
     void on_checkTime_stateChanged(int arg1);
     void processIDResponse();
@@ -187,5 +203,10 @@ private slots:
     void on_getCOND_clicked();
     void on_getTDSkb_clicked();
     void on_getCONDkb_clicked();
+    void on_stopNH4_ALL_clicked();
+    void on_btnClearRec_clicked();
+    void on_btnClearRec_4_clicked();
+    void on_setID_clicked();
+    void on_exportData_clicked();
 };
 #endif // WIDGET_H
