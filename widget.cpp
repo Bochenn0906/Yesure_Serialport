@@ -584,6 +584,12 @@ void Widget::serialPortRead_Slot()
         ui->T_B->setText(stringB);
         break;
         break;
+    case CHL_REG:
+        READ_Command = 0;
+        readDataKB(recBuf);
+        ui->CHLK->setText(stringK);
+        ui->CHLB->setText(stringB);
+        break;
     case TUR_Kb_REG:
         READ_Command = 0;
         readDataKB(recBuf);
@@ -651,13 +657,48 @@ void Widget::serialPortRead_Slot()
         ui->TDS_K->setText(stringK);
         ui->TDS_B->setText(stringB);
         break;
-    case COND_REG:
+    case TUBR_Kb_REG:
         READ_Command = 0;
-        readNH4_ALL(recBuf);
-        ui->COND_TEMP->setText(DATA1);
-        ui->COND->setText(DATA2);
-        ui->SAIL->setText(DATA3);
-        ui->TDS->setText(DATA4);
+        readDataKB(recBuf);
+        ui->TUBR_K->setText(stringK);
+        ui->TUBR_B->setText(stringB);
+        break;
+    case SS_Kb_REG:
+        READ_Command = 0;
+        readDataKB(recBuf);
+        ui->SS_K->setText(stringK);
+        ui->SS_B->setText(stringB);
+        break;
+    case TRANS_Kb_REG:
+        READ_Command = 0;
+        readDataKB(recBuf);
+        ui->TR_K->setText(stringK);
+        ui->TR_B->setText(stringB);
+        break;
+    case COND_REG:
+        handleCOND_ALL();
+        break;
+    case CHL_ALL:
+        handleCHL_ALL();
+        break;
+    case TUBR_REG:
+        handleTUBR_ALL();
+        break;
+    case BGA_Kb_REG:
+        readDataKB(recBuf);
+        ui->BGA_K->setText(stringK);
+        break;
+    case BGA_ALL:
+        handleBGA_ALL();
+        break;
+    case COD_ALL:
+        handleCOD_ALL();
+        break;
+    case COD_KB_REG:
+        readDataKB(recBuf);
+        ui->COD_K->setText(stringK);
+        ui->COD_B->setText(stringB);
+
         break;
     default:
         break;
@@ -875,8 +916,8 @@ void Widget::on_getPH_clicked()
 // COD 查询K/B
 void Widget::on_getCODkb_clicked()
 {
-    READ_Command = 0x00C4;
-    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, READ_Command, 4);
+    READ_Command = 0X0068;
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, CALIB_COE_REG, 4);
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
 }
 
@@ -900,6 +941,13 @@ void Widget::on_getHUMI_clicked()
 
 void Widget::on_getNH4_ALL_clicked()
 {
+    // //每次点击先清空timer，防止叠加
+    // if (timer) {
+    //     timer->stop();
+    //     delete timer;
+    //     timer = nullptr;
+    // }
+
     READ_Command = 0X0048;
     request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, NH4_ALL, 20);
     qDebug() << "on_getNH4_ALL_clicked:" << request;
@@ -949,12 +997,39 @@ void Widget::on_getBoardTemp_clicked()
 }
 void Widget::on_getCOND_clicked()
 {
-    READ_Command = 0X0036;
+    // //每次点击先清空timer，防止叠加
+    // if (timer) {
+    //     timer->stop();
+    //     delete timer;
+    //     timer = nullptr;
+    // }
+
     request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, COND_REG, 8);
 
-    mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
+    // 创建定时器并连接槽函数
+    timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, [this](){
+        READ_Command = 0X0036;
+
+        mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
+    });
+    timer->start(2000);
 }
 
+void Widget::on_getCHL_ALL_clicked()
+{
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, CHL_ALL, 4);
+
+    // 创建定时器并连接槽函数
+    timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, [this](){
+        READ_Command = 0X0038;
+
+        mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
+    });
+    timer->start(2000);
+
+}
 void Widget::on_getCONDkb_clicked()
 {
     READ_Command = 0X0060;
@@ -973,7 +1048,13 @@ void Widget::on_getTDSkb_clicked()
 void Widget::on_getWaterTemp_clicked()
 {
 }
+void Widget::on_getCHLkb_clicked()
+{
+    READ_Command = 0X0061;
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, CALIB_COE_REG, 4);
 
+    mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
+}
 
 
 QString Widget::reverseFourOctets(const QString &data)
@@ -1044,6 +1125,7 @@ void Widget::readNH4_ALL(const QByteArray &data)
     QString data4 = data.toHex().toUpper().mid(30, 8);
     QString data5 = data.toHex().toUpper().mid(38, 8);
     QString data6 = data.toHex().toUpper().mid(46, 8);
+    QString data7 = data.toHex().toUpper().mid(54, 8);
 
     qDebug() << "data1: " << data1;
     qDebug() << "data2: " << data2;
@@ -1051,6 +1133,7 @@ void Widget::readNH4_ALL(const QByteArray &data)
     qDebug() << "data4: " << data4;
     qDebug() << "data5: " << data5;
     qDebug() << "data6: " << data6;
+    qDebug() << "data7: " << data7;
 
     DATA1 = QString::number(hexStringToFloat(reverseFourOctets(data1)));
     DATA2 = QString::number(hexStringToFloat(reverseFourOctets(data2)));
@@ -1058,6 +1141,8 @@ void Widget::readNH4_ALL(const QByteArray &data)
     DATA4 = QString::number(hexStringToFloat(reverseFourOctets(data4)));
     DATA5 = QString::number(hexStringToFloat(reverseFourOctets(data5)));
     DATA6 = QString::number(hexStringToFloat(reverseFourOctets(data6)));
+    DATA7 = QString::number(hexStringToFloat(reverseFourOctets(data7)));
+
 }
 
 int Widget::readID(const QByteArray &data)
@@ -1146,11 +1231,11 @@ void Widget::on_chgNH4p_clicked()
 //ID修改
 void Widget::on_setID_clicked()
 {
-    // Modbus_pre= "FF1000A4000408";
-    QString dataToWrite = appendKB("FF", ui->NH4p_B->text());
-    qDebug() << "dataToWrite" << dataToWrite;
+    QString inputText = ui->IDtoSet->text();
 
-    request = writeRequestWithCRC_M("FF", WRITEM_COMMAND, NH4_Kb_REG, 4, 8, dataToWrite);
+    QString dataToWrite = ushortToHex(stringToUShort(inputText));
+
+    request = writeRequestWithCRC_S(ui->newID->text(), WRITES_COMMAND, MODBUS_ADD, dataToWrite); // 需要改寄存器
     qDebug() << "write request with crc:" << request;
 
     mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
@@ -1370,6 +1455,154 @@ void Widget::handleNH4_ALL()
     model->setData(model->index(row, 5), DATA5);
     model->setData(model->index(row, 6), DATA6);
 }
+void Widget::handleCOND_ALL()
+{
+    READ_Command = 0;
+    readNH4_ALL(recBuf);
+
+    if (model->rowCount() == 0) {
+        model->setHorizontalHeaderLabels({"时间", "温度", "电导率", "盐度", "TDS"});
+    }
+
+    ui->COND_TEMP->setText(DATA1);
+    ui->COND->setText(DATA2);
+    ui->SAIL->setText(DATA3);
+    ui->TDS->setText(DATA4);
+
+    // 获取当前时间
+    QString timeStamp = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+
+    // 创建一个新行并添加数据
+    int row = model->rowCount();
+    model->insertRow(row);
+
+    model->setData(model->index(row, 0), timeStamp);
+    model->setData(model->index(row, 1), DATA1);
+    model->setData(model->index(row, 2), DATA2);
+    model->setData(model->index(row, 3), DATA3);
+    model->setData(model->index(row, 4), DATA4);
+
+}
+
+void Widget::handleCHL_ALL()
+{
+    READ_Command = 0;
+    readNH4_ALL(recBuf);
+
+    if (model->rowCount() == 0) {
+        model->setHorizontalHeaderLabels({"时间", "温度", "叶绿素"});
+    }
+
+    ui->CHL_value->setText(DATA1);
+    ui->CHL_Temp->setText(DATA2);
+
+    // 获取当前时间
+    QString timeStamp = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+
+    // 创建一个新行并添加数据
+    int row = model->rowCount();
+    model->insertRow(row);
+
+    model->setData(model->index(row, 0), timeStamp);
+    model->setData(model->index(row, 1), DATA1);
+    model->setData(model->index(row, 2), DATA2);
+
+}
+void Widget::handleTUBR_ALL()
+{
+    READ_Command = 0;
+    readNH4_ALL(recBuf);
+
+    if (model->rowCount() == 0) {
+        model->setHorizontalHeaderLabels({"时间", "温度", "浊度", "悬浮物", "水透明度"});
+    }
+
+    ui->TUBR_VALUE->setText(DATA1);
+    ui->TUBR_temp->setText(DATA2);
+    // ui->CHL_Temp->setText(DATA3);
+    // ui->CHL_Temp->setText(DATA4);
+    // ui->CHL_Temp->setText(DATA5);
+
+
+    // 获取当前时间
+    QString timeStamp = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+
+    // 创建一个新行并添加数据
+    int row = model->rowCount();
+    model->insertRow(row);
+
+    model->setData(model->index(row, 0), timeStamp);
+    model->setData(model->index(row, 1), DATA1);
+    model->setData(model->index(row, 2), DATA2);
+    model->setData(model->index(row, 3), DATA3);
+    model->setData(model->index(row, 4), DATA4);
+    model->setData(model->index(row, 5), DATA5);
+}
+void Widget::handleBGA_ALL()
+{
+    READ_Command = 0;
+    readNH4_ALL(recBuf);
+
+    if (model->rowCount() == 0) {
+        model->setHorizontalHeaderLabels({"时间", "温度", "浊度", "悬浮物", "水透明度"});
+    }
+
+    ui->TUBR_VALUE->setText(DATA1);
+    ui->TUBR_temp->setText(DATA2);
+    // ui->CHL_Temp->setText(DATA3);
+    // ui->CHL_Temp->setText(DATA4);
+    // ui->CHL_Temp->setText(DATA5);
+
+
+    // 获取当前时间
+    QString timeStamp = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+
+    // 创建一个新行并添加数据
+    int row = model->rowCount();
+    model->insertRow(row);
+
+    model->setData(model->index(row, 0), timeStamp);
+    model->setData(model->index(row, 1), DATA1);
+    model->setData(model->index(row, 2), DATA2);
+    model->setData(model->index(row, 3), DATA3);
+    model->setData(model->index(row, 4), DATA4);
+    model->setData(model->index(row, 5), DATA5);
+}
+void Widget::handleCOD_ALL()
+{
+    READ_Command = 0;
+    readNH4_ALL(recBuf);
+
+    if (model->rowCount() == 0) {
+        model->setHorizontalHeaderLabels({"时间", "温度", "COD", "TOC", "SAC", "BOD","T%","TUBR"});
+    }
+
+    ui->COD_VALUE->setText(DATA1);
+    ui->COD_Temp->setText(DATA2);
+    // ui->CHL_Temp->setText(DATA3);
+    // ui->CHL_Temp->setText(DATA4);
+    // ui->CHL_Temp->setText(DATA5);
+    // ui->CHL_Temp->setText(DATA6);
+    // ui->CHL_Temp->setText(DATA7);
+
+
+    // 获取当前时间
+    QString timeStamp = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+
+    // 创建一个新行并添加数据
+    int row = model->rowCount();
+    model->insertRow(row);
+
+    model->setData(model->index(row, 0), timeStamp);
+    model->setData(model->index(row, 1), DATA1);
+    model->setData(model->index(row, 2), DATA2);
+    model->setData(model->index(row, 3), DATA3);
+    model->setData(model->index(row, 4), DATA4);
+    model->setData(model->index(row, 5), DATA5);
+    model->setData(model->index(row, 6), DATA6);
+    model->setData(model->index(row, 7), DATA7);
+
+}
 
 void Widget::on_btnClearRec_4_clicked()
 {
@@ -1419,5 +1652,162 @@ void Widget::on_exportData_clicked()
     file.close();
     QMessageBox::information(this, tr("Export Successful"),
                              tr("Data has been exported to %1.").arg(fileName));
+}
+
+
+void Widget::on_stopCOND_clicked()
+{
+    if (timer) {
+        timer->stop();
+        delete timer;
+        timer = nullptr;
+    }
+}
+
+void Widget::on_stopCHL_ALL_clicked()
+{
+    if (timer) {
+        timer->stop();
+        delete timer;
+        timer = nullptr;
+    }
+}
+
+
+
+void Widget::on_getTUkb_clicked()
+{
+    READ_Command = 0X0062;
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, CALIB_COE_REG, 4);
+    mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
+}
+
+
+void Widget::on_chgTUkb_clicked()
+{
+    QString dataToWrite = appendKB(ui->TUBR_K->text(), ui->TUBR_B->text());
+    request = writeRequestWithCRC_M(ui->newID->text(), WRITEM_COMMAND, CALIB_COE_REG, 4, 8, dataToWrite);
+    qDebug() << "write request with crc:" << request;
+
+    mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
+}
+
+
+void Widget::on_getSSkb_clicked()
+{
+    READ_Command = 0x0063;
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, TOC_Kb_REG, 4);
+    mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
+}
+
+
+void Widget::on_chgSSkb_clicked()
+{
+    QString dataToWrite = appendKB(ui->SS_K->text(), ui->SS_B->text());
+    request = writeRequestWithCRC_M(ui->newID->text(), WRITEM_COMMAND, TOC_Kb_REG, 4, 8, dataToWrite);
+    qDebug() << "write request with crc:" << request;
+
+    mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
+}
+
+
+void Widget::on_getTRkb_clicked()
+{
+    READ_Command = 0x0064;
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, SAC_Kb_REG, 4);
+    mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
+}
+
+
+void Widget::on_chgTRkb_clicked()
+{
+    QString dataToWrite = appendKB(ui->TR_K->text(), ui->TR_B->text());
+    request = writeRequestWithCRC_M(ui->newID->text(), WRITEM_COMMAND, SAC_Kb_REG, 4, 8, dataToWrite);
+    qDebug() << "write request with crc:" << request;
+
+    mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
+}
+
+
+void Widget::on_getTUall_clicked()
+{
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, TUBR_REG, 8);
+
+    // 创建定时器并连接槽函数
+    timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, [this](){
+        READ_Command = 0X0034;
+
+        mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
+    });
+    timer->start(2000);
+}
+
+
+void Widget::on_getBGAkb_clicked()
+{
+    READ_Command = 0x0065;
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, CALIB_COE_REG, 4);
+    mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
+}
+
+
+void Widget::on_chgBGAkb_clicked()
+{
+    QString dataToWrite = appendKB(ui->BGA_K->text(), ui->BGA_B->text());
+    request = writeRequestWithCRC_M(ui->newID->text(), WRITEM_COMMAND, CALIB_COE_REG, 4, 8, dataToWrite);
+    qDebug() << "write request with crc:" << request;
+
+    mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
+}
+
+
+void Widget::on_getBGA_ALL_clicked()
+{
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, CHL_ALL, 8);
+
+    // 创建定时器并连接槽函数
+    timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, [this](){
+        READ_Command = 0X0066;
+
+        mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
+    });
+    timer->start(2000);
+}
+
+
+void Widget::on_stopBGA_ALL_clicked()
+{
+    if (timer) {
+        timer->stop();
+        delete timer;
+        timer = nullptr;
+    }
+}
+
+
+void Widget::on_getCODall_clicked()
+{
+    request = readRequestWithCRC(ui->newID->text(), READ_COMMAND, TDS_REG, 14);
+
+    // 创建定时器并连接槽函数
+    timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, [this](){
+        READ_Command = 0X0067;
+
+        mySerialPort->write(QByteArray::fromHex(request.toUtf8()));
+    });
+    timer->start(2000);
+}
+
+
+void Widget::on_stopCODall_clicked()
+{
+    if (timer) {
+        timer->stop();
+        delete timer;
+        timer = nullptr;
+    }
 }
 

@@ -43,10 +43,19 @@
 #define K_T          0X00D6
 #define Kp_comp      0X007C
 #define TEMP_REG     0X0030
+#define TUBR_REG     0X0034
 #define COND_REG     0X0036
 #define TDS_REG      0X0040
 #define CALIB_COE_REG     0X0060
-
+#define CHL_REG     0X0061 //重了
+#define CHL_ALL     0X0038
+#define TUBR_Kb_REG     0X0062 //60重复
+#define SS_Kb_REG     0X0063 //B0重复
+#define TRANS_Kb_REG     0X0064 //B4重复
+#define BGA_Kb_REG     0X0065 //038重复
+#define BGA_ALL     0X0066 //038重复
+#define COD_ALL     0X0067 //038重复
+#define COD_KB_REG     0X0068 //60重复
 
 #define READ_COMMAND    03
 #define WRITEM_COMMAND  16
@@ -102,12 +111,14 @@ public:
     QString DATA8;
     QString DATA9;
     QString DATA10;
+
     void readDataKB(const QByteArray &data);
     void readSN(const QByteArray &data);
     void readHumi(const QByteArray &data);
     int readWiperTime(const QByteArray &data);
     int readID(const QByteArray &data);
     void readNH4_ALL(const QByteArray &data);
+
     void readNH4_T(const QByteArray &data);
     void readTEMP(const QByteArray &data);
     QString appendKB( QString data1, QString data2);
@@ -131,6 +142,11 @@ public:
     };
 
     void handleNH4_ALL();
+    void handleCOND_ALL();
+    void handleCHL_ALL();
+    void handleTUBR_ALL();
+    void handleBGA_ALL();
+    void handleCOD_ALL();
 
 private:
     Ui::Widget *ui;    
@@ -149,9 +165,9 @@ private:
     QTableView *tableview_Sensor;
     QString timeStamp;
 protected:
-    // void mousePressEvent(QMouseEvent *event);
-    // void mouseMoveEvent(QMouseEvent *event);
-    // void mouseReleaseEvent(QMouseEvent *event);
+           // void mousePressEvent(QMouseEvent *event);
+           // void mouseMoveEvent(QMouseEvent *event);
+           // void mouseReleaseEvent(QMouseEvent *event);
 private slots:
     void on_btnSwitchOn_clicked();
     void on_btnSwitchOff_clicked();
@@ -208,5 +224,22 @@ private slots:
     void on_btnClearRec_4_clicked();
     void on_setID_clicked();
     void on_exportData_clicked();
+    void on_stopCOND_clicked();
+    void on_getCHLkb_clicked();
+    void on_getCHL_ALL_clicked();
+    void on_stopCHL_ALL_clicked();
+    void on_getTUkb_clicked();
+    void on_chgTUkb_clicked();
+    void on_getSSkb_clicked();
+    void on_chgSSkb_clicked();
+    void on_getTRkb_clicked();
+    void on_chgTRkb_clicked();
+    void on_getTUall_clicked();
+    void on_getBGAkb_clicked();
+    void on_chgBGAkb_clicked();
+    void on_getBGA_ALL_clicked();
+    void on_stopBGA_ALL_clicked();
+    void on_getCODall_clicked();
+    void on_stopCODall_clicked();
 };
 #endif // WIDGET_H
