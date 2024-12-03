@@ -8,7 +8,7 @@
 Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget)
 {
     ui->setupUi(this);
-    setWindowTitle("研煊调试助手");
+    setWindowTitle("沈精灵");
 
     // // 定时发送-定时器
     // timSend = new QTimer;
@@ -31,6 +31,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget)
 
     model = new QStandardItemModel(this);
     ui->tableview_Sensor->setModel(model);
+
 }
 
 Widget::~Widget()

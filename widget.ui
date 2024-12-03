@@ -1345,7 +1345,7 @@ QTextEdit {
         <attribute name="title">
          <string>COD</string>
         </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_14">
+        <layout class="QVBoxLayout" name="verticalLayout_14" stretch="2,1">
          <item>
           <layout class="QGridLayout" name="gridLayout_5">
            <item row="1" column="5">
@@ -1442,13 +1442,13 @@ QTextEdit {
              <property name="minimumSize">
               <size>
                <width>60</width>
-               <height>10</height>
+               <height>20</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>60</width>
-               <height>10</height>
+               <height>20</height>
               </size>
              </property>
              <property name="text">
@@ -1499,13 +1499,13 @@ QTextEdit {
              <property name="minimumSize">
               <size>
                <width>60</width>
-               <height>10</height>
+               <height>20</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>60</width>
-               <height>10</height>
+               <height>20</height>
               </size>
              </property>
              <property name="text">
@@ -1527,13 +1527,13 @@ QTextEdit {
              <property name="minimumSize">
               <size>
                <width>60</width>
-               <height>10</height>
+               <height>20</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>60</width>
-               <height>10</height>
+               <height>20</height>
               </size>
              </property>
              <property name="text">
@@ -1584,13 +1584,13 @@ QTextEdit {
              <property name="minimumSize">
               <size>
                <width>60</width>
-               <height>10</height>
+               <height>20</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>60</width>
-               <height>16777215</height>
+               <height>20</height>
               </size>
              </property>
              <property name="text">
@@ -1720,13 +1720,13 @@ QTextEdit {
              <property name="minimumSize">
               <size>
                <width>60</width>
-               <height>10</height>
+               <height>20</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>60</width>
-               <height>16777215</height>
+               <height>20</height>
               </size>
              </property>
              <property name="text">
@@ -1798,13 +1798,13 @@ QTextEdit {
              <property name="minimumSize">
               <size>
                <width>60</width>
-               <height>10</height>
+               <height>20</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>60</width>
-               <height>10</height>
+               <height>20</height>
               </size>
              </property>
              <property name="text">
@@ -1909,13 +1909,13 @@ QTextEdit {
              <property name="minimumSize">
               <size>
                <width>60</width>
-               <height>10</height>
+               <height>20</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>60</width>
-               <height>16777215</height>
+               <height>20</height>
               </size>
              </property>
              <property name="text">
@@ -1937,13 +1937,13 @@ QTextEdit {
              <property name="minimumSize">
               <size>
                <width>60</width>
-               <height>10</height>
+               <height>20</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>60</width>
-               <height>16777215</height>
+               <height>20</height>
               </size>
              </property>
              <property name="text">
@@ -2044,13 +2044,13 @@ QTextEdit {
              <property name="minimumSize">
               <size>
                <width>60</width>
-               <height>10</height>
+               <height>20</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>60</width>
-               <height>10</height>
+               <height>20</height>
               </size>
              </property>
              <property name="text">
@@ -2204,13 +2204,13 @@ QTextEdit {
              <property name="minimumSize">
               <size>
                <width>60</width>
-               <height>10</height>
+               <height>20</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>60</width>
-               <height>16777215</height>
+               <height>20</height>
               </size>
              </property>
              <property name="text">
@@ -2261,13 +2261,13 @@ QTextEdit {
              <property name="minimumSize">
               <size>
                <width>60</width>
-               <height>10</height>
+               <height>20</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>60</width>
-               <height>16777215</height>
+               <height>20</height>
               </size>
              </property>
              <property name="text">
@@ -2289,13 +2289,13 @@ QTextEdit {
              <property name="minimumSize">
               <size>
                <width>60</width>
-               <height>10</height>
+               <height>20</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>60</width>
-               <height>10</height>
+               <height>20</height>
               </size>
              </property>
              <property name="text">

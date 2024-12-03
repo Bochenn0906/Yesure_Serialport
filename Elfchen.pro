@@ -20,6 +20,9 @@ HEADERS += \
 FORMS += \
     widget.ui
 
+ RC_FILE=logo.rc
+
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
@@ -27,3 +30,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     Resources.qrc
+
+DISTFILES += \
+    logo.rc \
+    logoo.ico
+ TARGRET = Elfchen
