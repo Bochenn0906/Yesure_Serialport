@@ -241,5 +241,11 @@ private slots:
     void on_stopBGA_ALL_clicked();
     void on_getCODall_clicked();
     void on_stopCODall_clicked();
+    void on_basic_clicked();
+    void switchPage();
+
+    void on_coefficient_clicked();
+    void on_parameters_clicked();
+    void on_charts_clicked();
 };
 #endif // WIDGET_H

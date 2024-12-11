@@ -42,105 +42,6 @@ Widget::~Widget()
     delete ui;
 }
 
-// void Widget::mousePressEvent(QMouseEvent *event)
-// {
-//     switch ( event->button()){
-//     case Qt::RightButton:
-//         this->close();
-//         break;
-//     case Qt::LeftButton:
-//         isLeftPressed = true;
-//         mouseOffset = event->globalPos() - this->frameGeometry().topLeft();
-//     }
-// }
-// void Widget::mouseMoveEvent(QMouseEvent *event)
-// {
-//     QPoint globalPos = event->globalPos();
-//     if(!isLeftPressed){
-//         this->setCursorShape(globalPos);
-//         return;
-//     }
-
-//     if(location == CENTER){
-//         move(globalPos-mouseOffset);
-//         event->accept();
-//         return;
-//     }
-
-// }
-// void Widget::mouseReleaseEvent(QMouseEvent *event)
-// {
-//     if(event->button() == Qt::LeftButton) {
-//         isLeftPressed = false;
-
-//     }
-
-// }
-// void Widget::setCursorShape(const QPoint& point)
-// {
-//     QRect rect = this->rect();
-//     QPoint topLeft = mapToGlobal(rect.topLeft());
-//     QPoint bottomRight = mapToGlobal(rect.bottomRight());
-
-//     int x = point.x();
-//     int y = point.y();
-
-//     if(x >= topLeft.x() && x <= topLeft.x() + PADDING && y >= topLeft.y() && y <= topLeft.y() + PADDING)
-//     {
-//         // 判断是否在左上角区域
-//         location = TOP_LEFT;
-//         this->setCursor(QCursor(Qt::SizeFDiagCursor));
-//     }
-//     else if(x <= bottomRight.x() && x >= bottomRight.x() - PADDING && y <= bottomRight.y() && y >= bottomRight.y() - PADDING)
-//     {
-//         // 判断是否在右下角区域
-//         location = BOTTOM_RIGHT;
-//         this->setCursor(QCursor(Qt::SizeFDiagCursor));
-//     }
-//     else if(x >= topLeft.x() && x <= topLeft.x() + PADDING && y <= bottomRight.y() && y >= bottomRight.y() - PADDING)
-//     {
-//         // 判断是否在左下角区域
-//         location = BOTTOM_LEFT;
-//         this->setCursor(QCursor(Qt::SizeBDiagCursor));
-//     }
-//     else if(x <= bottomRight.x() && x >= bottomRight.x() - PADDING && y >= topLeft.y() && y <= topLeft.y() + PADDING)
-//     {
-//         // 判断是否在右上角区域
-//         location = TOP_RIGHT;
-//         this->setCursor(QCursor(Qt::SizeBDiagCursor));
-//     }
-//     else if(x >= topLeft.x() && x <= topLeft.x() + PADDING)
-//     {
-//         // 判断是否在左边区域
-//         location = LEFT;
-//         this->setCursor(QCursor(Qt::SizeHorCursor));
-//     }
-//     else if(x <= bottomRight.x() && x >= bottomRight.x() - PADDING)
-//     {
-//         // 判断是否在右边区域
-//         location = RIGHT;
-//         this->setCursor(QCursor(Qt::SizeHorCursor));
-//     }
-//     else if(y < bottomRight.y() && y >= bottomRight.y() - PADDING)
-//     {
-//         // 判断是否在下边区域
-//         location = BOTTOM;
-//         this->setCursor(QCursor(Qt::SizeVerCursor));
-//     }
-//     else if(y >= topLeft.y() && y <= topLeft.y() + PADDING)
-//     {
-//         // 判断是否在上边区域
-//         location = TOP;
-//         this->setCursor(QCursor(Qt::SizeVerCursor));
-//     }
-//     else
-//     {
-//         // 如果都不满足，则为中心区域
-//         location = CENTER;
-//         this->setCursor(QCursor(Qt::ArrowCursor));
-//     }
-// }
-
 QString Widget::intToHexWithPadding(int value, int padding)
 {
     QString hexValue = QString::number(value, 16).toUpper();
@@ -1810,5 +1711,47 @@ void Widget::on_stopCODall_clicked()
         delete timer;
         timer = nullptr;
     }
+}
+
+void Widget::switchPage(){
+    QPushButton *button = qobject_cast<QPushButton*>(sender());
+    if(button==ui->basic)
+        ui->stackedWidget->setCurrentIndex(0);
+    else if(button==ui->coefficient)
+        ui->stackedWidget->setCurrentIndex(1);
+    else if(button==ui->parameters)
+        ui->stackedWidget->setCurrentIndex(2);
+    else if(button==ui->charts)
+        ui->stackedWidget->setCurrentIndex(3);
+    int i = 0;
+    ui->stackedWidget->widget(i);
+
+}
+
+void Widget::on_basic_clicked()
+{
+    switchPage();
+
+}
+
+
+void Widget::on_coefficient_clicked()
+{
+    switchPage();
+
+}
+
+
+void Widget::on_parameters_clicked()
+{
+    switchPage();
+
+}
+
+
+void Widget::on_charts_clicked()
+{
+    switchPage();
+
 }
 
