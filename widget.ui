@@ -6,19 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1212</width>
-    <height>740</height>
+    <width>1114</width>
+    <height>750</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Widget</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QWidget{
-background-color：black；
+   <string notr="true">QWidget
+{
+background-color:#FFFCF8;
+color:black;
 }</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="5,3">
    <property name="spacing">
     <number>0</number>
    </property>
@@ -35,281 +37,1034 @@ background-color：black；
     <number>0</number>
    </property>
    <item>
-    <widget class="QWidget" name="verticalWidget" native="true">
-     <property name="styleSheet">
-      <string notr="true">
-QWidget {
-    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(227, 238, 255, 255), stop:0.026 rgba(227, 238, 255, 255), stop:0.9688 rgba(243, 231, 233, 255), stop:0.9896 rgba(243, 231, 233, 255));
+    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,3">
+     <property name="spacing">
+      <number>40</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QWidget" name="verticalWidget_3" native="true">
+       <property name="minimumSize">
+        <size>
+         <width>80</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>80</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QWidget
+{
+background-color:white;
+box-shadow: 15px 5px 10px rgba(0, 0, 0, 0.5);
+border-radius:15px;
 
 }</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,0,2">
+        <property name="spacing">
+         <number>30</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QWidget" name="verticalWidget_2" native="true">
+          <property name="styleSheet">
+           <string notr="true">QPushButton
+{
+	background-color: white; /*背景色*/ 
+	border-style: outset;
+	border-width: 1px;
+	border-radius:15px; /*边界圆滑*/
+border-color:black;
+	font: bold 14px;
+	min-width:2em;
+	color:black; /*字体颜色*/
+	font-family:华文新魏;
+	padding: 5px;
+}
+ 
+QPushButton:hover
+{
+	background-color: black;
+	color:white; /*字体颜色*/
+
+}
+ 
+QPushButton:pressed
+{
+	background-color: #1E90FF; /*伪状态经过时背景色*/ 
+	border-style: inset;
+}
+QPushButton:!enabled{
+	background-color: rgb(100, 100, 100);
+	border-style: inset;
+}</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_6">
+           <property name="spacing">
+            <number>20</number>
+           </property>
+           <item>
+            <widget class="QPushButton" name="pushButton_2">
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>60</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>60</width>
+               <height>60</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>A</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_6">
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>60</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>60</width>
+               <height>60</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>B</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_5">
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>60</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>60</width>
+               <height>60</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>C</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_4">
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>60</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>60</width>
+               <height>60</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>D</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_3">
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>60</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>60</width>
+               <height>60</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>E</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton">
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>60</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>60</width>
+               <height>60</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>F</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QWidget" name="verticalWidget" native="true">
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <property name="spacing">
+         <number>1</number>
+        </property>
+        <item>
+         <widget class="QStackedWidget" name="stackedWidget">
+          <widget class="QWidget" name="page">
+           <layout class="QVBoxLayout" name="verticalLayout_7">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QWidget" name="verticalWidget" native="true">
+              <layout class="QVBoxLayout" name="verticalLayout_8" stretch="0,1,3,5,1">
+               <item>
+                <spacer name="verticalSpacer_3">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="3,4,2">
+                 <item>
+                  <layout class="QVBoxLayout" name="verticalLayout_9" stretch="4,1">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QLabel" name="label">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>30</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>30</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>PingFang SC Semibold</family>
+                       <pointsize>24</pointsize>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>单指令操作</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLabel" name="label_2">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>PingFang SC Regular</family>
+                       <pointsize>10</pointsize>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>September 12,2024</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_14">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                  </layout>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_13">
+                 <item>
+                  <layout class="QVBoxLayout" name="verticalLayout_10"/>
+                 </item>
+                 <item>
+                  <layout class="QVBoxLayout" name="verticalLayout_12"/>
+                 </item>
+                 <item>
+                  <layout class="QVBoxLayout" name="verticalLayout_11"/>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_11"/>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_12"/>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="page_2"/>
+          <widget class="QWidget" name="page_3"/>
+          <widget class="QWidget" name="page_4"/>
+          <widget class="QWidget" name="page_5"/>
+          <widget class="QWidget" name="page_6"/>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QWidget" name="verticalWidget" native="true">
+     <property name="styleSheet">
+      <string notr="true">QWidget
+{
+background-color:#303030;
+border-radius:30px;
+}</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout" stretch="1,9">
+     <layout class="QVBoxLayout" name="verticalLayout_5" stretch="3,5">
       <property name="spacing">
-       <number>0</number>
-      </property>
-      <property name="leftMargin">
-       <number>0</number>
-      </property>
-      <property name="topMargin">
        <number>0</number>
       </property>
       <property name="rightMargin">
        <number>0</number>
       </property>
       <property name="bottomMargin">
-       <number>0</number>
+       <number>1</number>
       </property>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QPushButton" name="SingleIns">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>PingFang SC Semibold</family>
-            <pointsize>13</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QPushButton
-{color:white;}</string>
-          </property>
-          <property name="text">
-           <string>单独指令</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="BrushCheck">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>PingFang SC Semibold</family>
-            <pointsize>13</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QPushButton
-{color:white;}</string>
-          </property>
-          <property name="text">
-           <string>刷子调试</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="ChannelCheck">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>PingFang SC Semibold</family>
-            <pointsize>13</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QPushButton
-{color:white;}</string>
-          </property>
-          <property name="text">
-           <string>通道测试</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="CodCali">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>PingFang SC Semibold</family>
-            <pointsize>13</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QPushButton
-{color:white;}</string>
-          </property>
-          <property name="text">
-           <string>COD标定</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="MixedSolu">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>PingFang SC Semibold</family>
-            <pointsize>13</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QPushButton
-{color:white;}</string>
-          </property>
-          <property name="text">
-           <string>混合溶液</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="Robust">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>PingFang SC Semibold</family>
-            <pointsize>13</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QPushButton
-{color:white;}</string>
-          </property>
-          <property name="text">
-           <string>出厂验证可靠性</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <widget class="QWidget" name="verticalWidget" native="true">
+        <layout class="QVBoxLayout" name="verticalLayout_13" stretch="1,2">
+         <property name="leftMargin">
+          <number>10</number>
+         </property>
+         <property name="topMargin">
+          <number>10</number>
+         </property>
+         <property name="rightMargin">
+          <number>10</number>
+         </property>
+         <property name="bottomMargin">
+          <number>30</number>
+         </property>
+         <item>
+          <widget class="QWidget" name="horizontalWidget_7" native="true">
+           <property name="styleSheet">
+            <string notr="true">QWidget
+{
+color:white;
+
+}</string>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_16" stretch="1,1,1">
+            <property name="topMargin">
+             <number>30</number>
+            </property>
+            <property name="bottomMargin">
+             <number>10</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="label_3">
+              <property name="font">
+               <font>
+                <family>PingFang SC Regular</family>
+                <pointsize>14</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>传感器信息</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_7">
+              <property name="minimumSize">
+               <size>
+                <width>42</width>
+                <height>40</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>11111</width>
+                <height>11111111</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>PingFang SC Thin</family>
+                <pointsize>12</pointsize>
+                <italic>false</italic>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QPushButton
+{
+	background-color: transparent; /*背景色*/ 
+	border-style: outset;
+	border-width: 1px;
+	border-radius:10px; /*边界圆滑*/
+border-color:white;
+	min-width:2em;
+	color:white; /*字体颜色*/
+	padding: 5px;
+}
+ 
+QPushButton:hover
+{
+	background-color: black;
+	color:white; /*字体颜色*/
+
+}
+ 
+QPushButton:pressed
+{
+	background-color: #1E90FF; /*伪状态经过时背景色*/ 
+	border-style: inset;
+}
+QPushButton:!enabled{
+	background-color: rgb(100, 100, 100);
+	border-style: inset;
+}</string>
+              </property>
+              <property name="text">
+               <string>一键获取</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_18" stretch="2,3">
+           <property name="spacing">
+            <number>15</number>
+           </property>
+           <property name="leftMargin">
+            <number>10</number>
+           </property>
+           <property name="topMargin">
+            <number>10</number>
+           </property>
+           <property name="rightMargin">
+            <number>10</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QWidget" name="verticalWidget_6" native="true">
+             <property name="font">
+              <font>
+               <family>PingFang SC Regular</family>
+               <pointsize>11</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_14">
+              <property name="spacing">
+               <number>20</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QWidget" name="verticalWidget" native="true">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <family>PingFang SC Regular</family>
+                  <pointsize>13</pointsize>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QWidget
+{
+background-color:#F8DEBD;
+border-radius:10px;
+
+}</string>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_16">
+                 <property name="spacing">
+                  <number>6</number>
+                 </property>
+                 <property name="leftMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>10</number>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="label_4">
+                   <property name="font">
+                    <font>
+                     <family>PingFang SC Thin</family>
+                     <pointsize>17</pointsize>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>01</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_5">
+                   <property name="font">
+                    <font>
+                     <family>PingFang SC Thin</family>
+                     <pointsize>11</pointsize>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>设备地址</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QWidget" name="verticalWidget_8" native="true">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QWidget
+{
+background-color:#D0FBFF;
+border-radius:10px;
+
+}</string>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_17">
+                 <property name="leftMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>10</number>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="label_7">
+                   <property name="font">
+                    <font>
+                     <family>PingFang SC Thin</family>
+                     <pointsize>17</pointsize>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>v0949031</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_6">
+                   <property name="font">
+                    <font>
+                     <family>PingFang SC Thin</family>
+                     <pointsize>11</pointsize>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>产品序列</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="verticalWidget_7" native="true">
+             <layout class="QVBoxLayout" name="verticalLayout_15">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QWidget" name="verticalWidget_4" native="true">
+                <property name="font">
+                 <font>
+                  <family>PingFang SC Regular</family>
+                  <pointsize>13</pointsize>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QWidget
+{
+background-color:#4A4949;
+border-radius:10px;
+color:white;
+
+}</string>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_18" stretch="2,3">
+                 <property name="spacing">
+                  <number>0</number>
+                 </property>
+                 <property name="leftMargin">
+                  <number>8</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>8</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>8</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>8</number>
+                 </property>
+                 <item>
+                  <layout class="QVBoxLayout" name="verticalLayout_19" stretch="1,2">
+                   <property name="spacing">
+                    <number>10</number>
+                   </property>
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QLabel" name="label_8">
+                     <property name="font">
+                      <font>
+                       <family>PingFang SC Regular</family>
+                       <pointsize>11</pointsize>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>COD电子舱环境</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_17" stretch="3,1">
+                     <property name="spacing">
+                      <number>10</number>
+                     </property>
+                     <item>
+                      <widget class="QLabel" name="label_9">
+                       <property name="font">
+                        <font>
+                         <family>PingFang SC Light</family>
+                         <pointsize>18</pointsize>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>24.9</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QWidget" name="verticalWidget_5" native="true">
+                       <property name="maximumSize">
+                        <size>
+                         <width>16777215</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                       <property name="font">
+                        <font>
+                         <family>PingFang SC Regular</family>
+                         <pointsize>13</pointsize>
+                        </font>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QWidget
+{
+background-color:#3FA2F6;
+border-radius:7px;
+color:black;
+
+}</string>
+                       </property>
+                       <layout class="QVBoxLayout" name="verticalLayout_20">
+                        <property name="spacing">
+                         <number>0</number>
+                        </property>
+                        <property name="leftMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="topMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="rightMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="bottomMargin">
+                         <number>0</number>
+                        </property>
+                        <item>
+                         <widget class="QLabel" name="label_10">
+                          <property name="minimumSize">
+                           <size>
+                            <width>0</width>
+                            <height>0</height>
+                           </size>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <family>PingFang SC Regular</family>
+                            <pointsize>10</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>湿度</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <layout class="QVBoxLayout" name="verticalLayout_22" stretch="1,1,1">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <spacer name="verticalSpacer_5">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item>
+                    <widget class="QWidget" name="verticalWidget_9" native="true">
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>10</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>PingFang SC Regular</family>
+                       <pointsize>13</pointsize>
+                      </font>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QWidget {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #B5D4F1, stop:0.3777 #81E6DB, stop:0.704 #E8D284, stop:1 #E2798E);
+    border-radius: 4px;
+}</string>
+                     </property>
+                     <layout class="QVBoxLayout" name="verticalLayout_21">
+                      <property name="leftMargin">
+                       <number>10</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>10</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>10</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>10</number>
+                      </property>
+                     </layout>
+                    </widget>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_19" stretch="1,1,1,1,1">
+                     <property name="spacing">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <widget class="QLabel" name="label_13">
+                       <property name="font">
+                        <font>
+                         <family>PingFang SC Regular</family>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>0</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="label_14">
+                       <property name="font">
+                        <font>
+                         <family>PingFang SC Regular</family>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>10</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="label_15">
+                       <property name="font">
+                        <font>
+                         <family>PingFang SC Regular</family>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>20</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="label_11">
+                       <property name="font">
+                        <font>
+                         <family>PingFang SC Regular</family>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>30</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="label_12">
+                       <property name="font">
+                        <font>
+                         <family>PingFang SC Regular</family>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>40</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <widget class="QStackedWidget" name="stackedWidget">
-          <widget class="QWidget" name="page">
-           <layout class="QVBoxLayout" name="verticalLayout_4">
-            <item>
-             <widget class="QGroupBox" name="groupBox">
-              <property name="title">
-               <string>单独指令模式</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="page_2">
-           <layout class="QVBoxLayout" name="verticalLayout_5">
-            <item>
-             <widget class="QGroupBox" name="groupBox_2">
-              <property name="title">
-               <string>刷子调试模式</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="page_3">
-           <layout class="QVBoxLayout" name="verticalLayout_6">
-            <item>
-             <widget class="QGroupBox" name="groupBox_3">
-              <property name="title">
-               <string>通道测试模式</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="page_4">
-           <layout class="QVBoxLayout" name="verticalLayout_7">
-            <item>
-             <widget class="QGroupBox" name="groupBox_4">
-              <property name="title">
-               <string>COD标定模式</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="page_5">
-           <layout class="QVBoxLayout" name="verticalLayout_8">
-            <item>
-             <widget class="QGroupBox" name="groupBox_5">
-              <property name="title">
-               <string>混合溶液模式</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="page_6">
-           <layout class="QVBoxLayout" name="verticalLayout_3">
-            <item>
-             <widget class="QGroupBox" name="groupBox_6">
-              <property name="title">
-               <string>可靠性测试模式</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </widget>
-        </item>
-       </layout>
+       <layout class="QHBoxLayout" name="horizontalLayout_15"/>
       </item>
      </layout>
     </widget>

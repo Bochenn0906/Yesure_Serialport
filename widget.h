@@ -17,16 +17,6 @@ public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
 
-    void switchPage();
-
-private slots:
-    void on_SingleIns_clicked();
-    void on_BrushCheck_clicked();
-    void on_ChannelCheck_clicked();
-    void on_CodCali_clicked();
-    void on_MixedSolu_clicked();
-    void on_Robust_clicked();
-
 private:
     Ui::Widget *ui;
 };
